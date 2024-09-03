@@ -1,6 +1,7 @@
 package senac.ads.projeto_integrador_iv.models;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.*;
 
@@ -13,9 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Produto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer codigo;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     private String nome;
 

@@ -2,6 +2,7 @@ package senac.ads.projeto_integrador_iv.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,9 +15,11 @@ import lombok.Data;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Usuario {
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+
     private String nome;
 
-    @Id
     private Long cpf;
 
     private String nascimento;

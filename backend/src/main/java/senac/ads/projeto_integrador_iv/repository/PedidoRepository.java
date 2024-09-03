@@ -1,7 +1,11 @@
 package senac.ads.projeto_integrador_iv.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import senac.ads.projeto_integrador_iv.models.Pedido;
 
-public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
+import java.util.UUID;
+
+@Repository
+public interface PedidoRepository extends JpaRepository<Pedido, UUID> {
 }
