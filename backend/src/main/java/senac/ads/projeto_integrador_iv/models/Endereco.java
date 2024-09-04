@@ -1,6 +1,8 @@
 package senac.ads.projeto_integrador_iv.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
@@ -16,8 +19,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Endereco {
-    @Id
-    private Integer cep;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+
+    private String cep;
 
     private String logradouro;
 

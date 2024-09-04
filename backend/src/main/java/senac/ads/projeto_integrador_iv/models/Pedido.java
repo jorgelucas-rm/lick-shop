@@ -4,11 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,11 +17,13 @@ public class Pedido {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigo;
 
+    @OneToOne
     private Usuario dono;
 
     private String endereco;
 
-    private String situacao;
+    @ManyToOne
+    private Situacao situacao;
 
     @ManyToMany
     private List<Produto> produtos = new ArrayList<>();

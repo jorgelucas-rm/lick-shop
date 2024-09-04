@@ -3,6 +3,7 @@ package senac.ads.projeto_integrador_iv.models;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,8 +20,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Carrinho {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int codigo;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     @OneToOne
     private Usuario dono;
