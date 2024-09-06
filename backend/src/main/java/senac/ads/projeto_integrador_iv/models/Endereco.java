@@ -37,12 +37,15 @@ public class Endereco {
     private String complemento;
 
     public String getEnderecoCompleto() {
-        List<String> parts = Arrays.asList(this.logradouro, this.numero, this.complemento, this.bairro, this.cidade, this.estado);
+        List<String> parts = Arrays.asList(this.logradouro,
+                this.numero,
+                this.complemento,
+                this.bairro,
+                this.cidade,
+                this.estado);
 
-        // Filter out null values and join the remaining parts with ", "
-        String enderecoCompleto = parts.stream()
+        return parts.stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(", "));
-        return enderecoCompleto;
     }
 }
