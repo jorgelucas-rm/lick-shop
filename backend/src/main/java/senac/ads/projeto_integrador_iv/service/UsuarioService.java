@@ -1,16 +1,17 @@
 package senac.ads.projeto_integrador_iv.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import senac.ads.projeto_integrador_iv.models.Usuario;
 import senac.ads.projeto_integrador_iv.repository.UsuarioRepository;
 
-@RestController
+@Service
 public class UsuarioService {
 
     @Autowired
@@ -20,8 +21,9 @@ public class UsuarioService {
         return new ResponseEntity<>(usuarioRepository.findAll(),HttpStatus.OK);
     }
 
-    public ResponseEntity<Usuario> buscarPorId(String id){
+    public ResponseEntity<Usuario> buscarPorId(UUID id){
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
+
         if(usuario == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -29,7 +31,9 @@ public class UsuarioService {
     }
 
     public ResponseEntity criarUsuario(Usuario novoUsuario){
-        Usuario usuario = usuarioRepository.findById(novoUsuario.getCpf()).orElse(null);
+        Usuario usuario = usuarioRepository.findByCpf(novoUsuario.getCpf())
+                .orElse(null);
+
         if(usuario == novoUsuario){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
@@ -37,7 +41,7 @@ public class UsuarioService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity atualizarUsuario(String id, Usuario atualizacaoUsuario){
+    public ResponseEntity atualizarUsuario(UUID id, Usuario atualizacaoUsuario){
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
         if(usuario == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -46,7 +50,7 @@ public class UsuarioService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity deletarUsuario(String id){
+    public ResponseEntity deletarUsuario(UUID id){
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
         if(usuario == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

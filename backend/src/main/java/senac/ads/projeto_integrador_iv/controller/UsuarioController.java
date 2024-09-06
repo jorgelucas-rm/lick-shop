@@ -1,6 +1,7 @@
 package senac.ads.projeto_integrador_iv.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import senac.ads.projeto_integrador_iv.models.Usuario;
 import senac.ads.projeto_integrador_iv.service.UsuarioService;
 
 @RestController
-@RequestMapping("/api/usuario")
+@RequestMapping("/api/v1/usuario")
 public class UsuarioController {
 
     @Autowired
@@ -29,7 +30,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarPorId(@PathVariable("id") String id){
+    public ResponseEntity<Usuario> buscarPorId(@PathVariable("id") UUID id){
         return usuarioService.buscarPorId(id);
     }
 
@@ -39,12 +40,12 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity atualizarUsuario(@PathVariable("id") String id, @RequestBody Usuario usuario){
+    public ResponseEntity atualizarUsuario(@PathVariable("id") UUID id, @RequestBody Usuario usuario){
         return usuarioService.atualizarUsuario(id, usuario);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deletarUsuario(@PathVariable("id") String id){
+    public ResponseEntity deletarUsuario(@PathVariable("id") UUID id){
         return usuarioService.deletarUsuario(id);
     }
 }
