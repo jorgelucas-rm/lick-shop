@@ -1,5 +1,6 @@
 package senac.ads.projeto_integrador_iv.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,11 +31,16 @@ public class MarcaService {
         return new ResponseEntity<>(marca, HttpStatus.OK);
     }
 
-    public ResponseEntity salvarMarca(Marca novaMarca){
+    public ResponseEntity<Marca> salvarMarca(Marca novaMarca){
+
+        novaMarca.setDataCriacao(LocalDateTime.now());
+        novaMarca.setDataAtualizacao(LocalDateTime.now());
+
+        System.out.println(novaMarca.getNome());
 
         marcaRepository.save(novaMarca);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(novaMarca, HttpStatus.OK);
     }
 
     public ResponseEntity atualizarMarca(UUID id, Marca atualizacaoMarca) {
@@ -57,7 +63,5 @@ public class MarcaService {
         marcaRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 }
 

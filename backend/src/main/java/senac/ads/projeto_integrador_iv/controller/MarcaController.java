@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import senac.ads.projeto_integrador_iv.models.Marca;
 import senac.ads.projeto_integrador_iv.service.MarcaService;
+
 
 @RestController
 @RequestMapping("/api/v1/marca")
@@ -29,7 +29,8 @@ public class MarcaController {
     }
 
     @PostMapping
-    public ResponseEntity criarMarca(@RequestBody Marca marca){
+    public ResponseEntity<Marca> criarMarca(@RequestBody Marca marca){
+        System.out.println(marca.getNome());
         return marcaService.salvarMarca(marca);
     }
 
