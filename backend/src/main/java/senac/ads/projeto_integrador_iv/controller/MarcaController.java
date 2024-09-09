@@ -30,7 +30,6 @@ public class MarcaController {
 
     @PostMapping
     public ResponseEntity<Marca> criarMarca(@RequestBody Marca marca){
-        System.out.println(marca.getNome());
         return marcaService.salvarMarca(marca);
     }
 

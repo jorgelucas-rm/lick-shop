@@ -1,16 +1,14 @@
 package senac.ads.projeto_integrador_iv.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-import java.util.UUID;
-
-@Entity
-public class Cargo {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+@AllArgsConstructor
+@Getter
+public enum Cargo {
+    ADMIN("admin"),
+    USER("user");
 
     private String cargo;
+
 }
