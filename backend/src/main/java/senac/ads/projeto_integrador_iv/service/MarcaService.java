@@ -36,8 +36,6 @@ public class MarcaService {
         novaMarca.setDataCriacao(LocalDateTime.now());
         novaMarca.setDataAtualizacao(LocalDateTime.now());
 
-        System.out.println(novaMarca.getNome());
-
         marcaRepository.save(novaMarca);
 
         return new ResponseEntity<>(novaMarca, HttpStatus.OK);

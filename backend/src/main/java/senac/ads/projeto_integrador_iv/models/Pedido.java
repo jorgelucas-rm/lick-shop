@@ -22,7 +22,6 @@ public class Pedido {
 
     private String endereco;
 
-    @ManyToOne
     private Situacao situacao;
 
     @ManyToMany

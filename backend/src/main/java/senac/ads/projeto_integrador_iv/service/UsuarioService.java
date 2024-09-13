@@ -6,9 +6,12 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import senac.ads.projeto_integrador_iv.models.Conta;
 import senac.ads.projeto_integrador_iv.models.Usuario;
+import senac.ads.projeto_integrador_iv.repository.ContaRepository;
 import senac.ads.projeto_integrador_iv.repository.UsuarioRepository;
 
 @Service
@@ -16,6 +19,8 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private ContaRepository contaRepository;
 
     public ResponseEntity<List<Usuario>> buscarTodos(){
         return new ResponseEntity<>(usuarioRepository.findAll(),HttpStatus.OK);
@@ -30,15 +35,21 @@ public class UsuarioService {
         return new ResponseEntity<>(usuario, HttpStatus.OK);
     }
 
-    public ResponseEntity criarUsuario(Usuario novoUsuario){
-        Usuario usuario = usuarioRepository.findByCpf(novoUsuario.getCpf())
-                .orElse(null);
-
-        if(usuario == novoUsuario){
+    public ResponseEntity criarUsuario(Usuario usuario){
+        if (
+                usuarioRepository.findByCpf(usuario.getCpf()).isPresent() ||
+                contaRepository.findByUsuario(usuario.getConta().getUsuario()) != null
+        ){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        usuarioRepository.save(novoUsuario);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Conta conta = usuario.getConta();
+
+        conta.setSenha(new BCryptPasswordEncoder().encode(conta.getSenha()));
+
+        contaRepository.save(conta);
+        usuarioRepository.save(usuario);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     public ResponseEntity atualizarUsuario(UUID id, Usuario atualizacaoUsuario){
