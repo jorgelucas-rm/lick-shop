@@ -31,18 +31,31 @@ public class ProdutoController {
     }
 
     @PostMapping
+<<<<<<< HEAD
     public ResponseEntity<Produto> criarProduto(@RequestBody ProdutoTO produto){
+=======
+    public ResponseEntity<Produto> criarProduto(@RequestBody Produto produto){
+>>>>>>> 89154a2 ([Backend]Feat: Alterações Usuario/ Produto/ Endereço Service. Criação UserTO. Alteração Produto Controler)
         return produtoService.salvarProduto(produto);
     }
 
     @PutMapping("/{id}")
+<<<<<<< HEAD
     public ResponseEntity<Produto> atualizarProduto(@PathVariable("id") UUID id, @RequestBody ProdutoAtualizadoTO produto){
+=======
+    public ResponseEntity<Produto> atualizarProduto(@PathVariable("id") UUID id, @RequestBody Produto produto){
+>>>>>>> 89154a2 ([Backend]Feat: Alterações Usuario/ Produto/ Endereço Service. Criação UserTO. Alteração Produto Controler)
         return produtoService.atualizarProduto(id, produto);
     }
 
     @DeleteMapping("/{id}")
+<<<<<<< HEAD
     public ResponseEntity<Produto> deletarProduto(@PathVariable UUID id){
         produtoService.deletarProduto(id);
         return ResponseEntity.noContent().build();
+=======
+    public ResponseEntity<Void> deletarProduto(@PathVariable UUID id){
+        return produtoService.deletarProduto(id);
+>>>>>>> 89154a2 ([Backend]Feat: Alterações Usuario/ Produto/ Endereço Service. Criação UserTO. Alteração Produto Controler)
     }
 }

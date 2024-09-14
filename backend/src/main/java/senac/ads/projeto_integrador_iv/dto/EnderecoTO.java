@@ -13,4 +13,6 @@ public class EnderecoTO {
     private String bairro;
     private String cidade;
     private String estado;
+    private String complemento;
+
 }

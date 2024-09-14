@@ -2,6 +2,7 @@ package senac.ads.projeto_integrador_iv.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +30,21 @@ public class ProdutoService {
     private CategoriaRepository categoriaRepository;
 
     public ResponseEntity<List<Produto>> buscarTodos(){
-        return new ResponseEntity<>(produtoRepository.findAll(), HttpStatus.OK);
+        List<Produto> produtos = produtoRepository.findAll();
+        return new ResponseEntity<>(produtos,HttpStatus.OK);
     }
 
     public ResponseEntity<Produto> buscarProdutoPorId(UUID id){
-        Produto produto = produtoRepository.findById(id).orElse(null);
-
-        if(produto == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Optional<Produto> produtoEspecifico = produtoRepository.findById(id);
+        if(produtoEspecifico.isPresent()){
+            return new ResponseEntity<>(produtoEspecifico.get(),HttpStatus.OK);
         }
-        return new ResponseEntity<>(produto, HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 
+<<<<<<< HEAD
     public ResponseEntity<Produto> salvarProduto(ProdutoTO novoProduto){
         if (produtoRepository.findByNome(novoProduto.getNome()) != null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -81,9 +85,48 @@ public class ProdutoService {
 
     public ResponseEntity<Produto> deletarProduto(UUID id){
         if(produtoRepository.findById(id).orElse(null) == null){
+=======
+    public ResponseEntity<Produto> salvarProduto(Produto novoProduto){
+        Optional<Produto> produtoPraAlterar = produtoRepository.findById(novoProduto.getId());
+        if(produtoPraAlterar.isPresent()){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+        Produto produtoNovo = produtoRepository.save(novoProduto);
+        return new ResponseEntity<>(produtoNovo,HttpStatus.CREATED);
+
+    }
+
+    public ResponseEntity<Produto> atualizarProduto(UUID id, Produto atualizacaoProduto) {
+        Optional<Produto> produtoOpt = produtoRepository.findById(id);
+        if(!produtoOpt.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        produtoRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        Produto produtoPraAtualizar = produtoOpt.get();
+        produtoPraAtualizar.setId(atualizacaoProduto.getId());
+        produtoPraAtualizar.setNome(atualizacaoProduto.getNome());
+        produtoPraAtualizar.setMarca(atualizacaoProduto.getMarca());
+        produtoPraAtualizar.setCategoria(atualizacaoProduto.getCategoria());
+        produtoPraAtualizar.setDescricaoCurta(atualizacaoProduto.getDescricaoCurta());
+        produtoPraAtualizar.setDescricaoDetalhada(atualizacaoProduto.getDescricaoDetalhada());
+        produtoPraAtualizar.setValorCusto(atualizacaoProduto.getValorCusto());
+        produtoPraAtualizar.setValorVenda(atualizacaoProduto.getValorVenda());
+        produtoPraAtualizar.setDataAtualizacao(atualizacaoProduto.getDataAtualizacao());
+
+        Produto produtoExistente = produtoRepository.save(produtoPraAtualizar);
+        return new ResponseEntity<>(produtoExistente,HttpStatus.OK);
+
+    }
+
+    public ResponseEntity<Void> deletarProduto(UUID id){
+        Optional<Produto> produtoOpt = produtoRepository.findById(id);
+        if(!produtoOpt.isPresent()){
+>>>>>>> 89154a2 ([Backend]Feat: Alterações Usuario/ Produto/ Endereço Service. Criação UserTO. Alteração Produto Controler)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        produtoRepository.delete(produtoOpt.get());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

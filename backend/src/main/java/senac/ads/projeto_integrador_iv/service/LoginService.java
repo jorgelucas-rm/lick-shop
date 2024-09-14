@@ -1,6 +1,8 @@
 package senac.ads.projeto_integrador_iv.service;
 
 import jakarta.validation.Valid;
+
+import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +41,9 @@ public class LoginService {
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
-    public ResponseEntity register(RegisterTO newRegister, Cargo cargo) {
+    public Conta register(RegisterTO newRegister, Cargo cargo) {
         if(contaRepository.findByUsuario(newRegister.getUsuario()) != null ){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return null;
         }
         Conta novaConta = new Conta();
         novaConta.setUsuario(newRegister.getUsuario());
@@ -53,6 +55,6 @@ public class LoginService {
 
         contaRepository.save(novaConta);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return novaConta;
     }
 }
