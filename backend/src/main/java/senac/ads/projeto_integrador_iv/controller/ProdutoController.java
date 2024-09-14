@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import senac.ads.projeto_integrador_iv.dto.ProdutoAtualizadoTO;
+import senac.ads.projeto_integrador_iv.dto.ProdutoTO;
 import senac.ads.projeto_integrador_iv.models.Produto;
 import senac.ads.projeto_integrador_iv.service.ProdutoService;
 
@@ -29,17 +31,17 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity criarProduto(@RequestBody Produto produto){
+    public ResponseEntity<Produto> criarProduto(@RequestBody ProdutoTO produto){
         return produtoService.salvarProduto(produto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity atualizarProduto(@PathVariable("id") UUID id, @RequestBody Produto produto){
+    public ResponseEntity<Produto> atualizarProduto(@PathVariable("id") UUID id, @RequestBody ProdutoAtualizadoTO produto){
         return produtoService.atualizarProduto(id, produto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deletarProduto(@PathVariable UUID id){
+    public ResponseEntity<Produto> deletarProduto(@PathVariable UUID id){
         produtoService.deletarProduto(id);
         return ResponseEntity.noContent().build();
     }
