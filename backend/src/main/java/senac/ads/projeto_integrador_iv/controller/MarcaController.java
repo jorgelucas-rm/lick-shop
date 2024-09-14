@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import senac.ads.projeto_integrador_iv.dto.MarcaTO;
 import senac.ads.projeto_integrador_iv.models.Marca;
 import senac.ads.projeto_integrador_iv.service.MarcaService;
 
@@ -29,12 +30,12 @@ public class MarcaController {
     }
 
     @PostMapping
-    public ResponseEntity<Marca> criarMarca(@RequestBody Marca marca){
+    public ResponseEntity<Marca> criarMarca(@RequestBody MarcaTO marca){
         return marcaService.salvarMarca(marca);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity atualizarMarca(@PathVariable("id") UUID id, @RequestBody Marca marca){
+    public ResponseEntity atualizarMarca(@PathVariable("id") UUID id, @RequestBody MarcaTO marca){
         return marcaService.atualizarMarca(id, marca);
     }
 

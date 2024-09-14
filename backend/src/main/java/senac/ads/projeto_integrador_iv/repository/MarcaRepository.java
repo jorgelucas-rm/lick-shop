@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface MarcaRepository extends JpaRepository<Marca, UUID> {
+    Marca findByNome(String nome);
 }

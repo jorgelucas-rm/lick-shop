@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import senac.ads.projeto_integrador_iv.dto.MarcaTO;
 import senac.ads.projeto_integrador_iv.models.Marca;
 import senac.ads.projeto_integrador_iv.repository.MarcaRepository;
 
@@ -31,35 +32,39 @@ public class MarcaService {
         return new ResponseEntity<>(marca, HttpStatus.OK);
     }
 
-    public ResponseEntity<Marca> salvarMarca(Marca novaMarca){
+    public ResponseEntity<Marca> salvarMarca(MarcaTO novaMarca){
+        if(marcaRepository.findByNome(novaMarca.getNome()) != null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Marca marca = new Marca();
 
-        novaMarca.setDataCriacao(LocalDateTime.now());
-        novaMarca.setDataAtualizacao(LocalDateTime.now());
+        marca.setNome(novaMarca.getNome());
+        marca.setDataCriacao(LocalDateTime.now());
+        marca.setDataAtualizacao(LocalDateTime.now());
 
-        marcaRepository.save(novaMarca);
+        marcaRepository.save(marca);
 
-        return new ResponseEntity<>(novaMarca, HttpStatus.OK);
+        return new ResponseEntity<>(marca, HttpStatus.OK);
     }
 
-    public ResponseEntity atualizarMarca(UUID id, Marca atualizacaoMarca) {
+    public ResponseEntity<Marca> atualizarMarca(UUID id, MarcaTO atualizacaoMarca) {
         Marca marca = marcaRepository.findById(id).orElse(null);
 
         if(marca == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        marcaRepository.save(atualizacaoMarca);
+        marca.setNome(atualizacaoMarca.getNome());
+        marca.setDataAtualizacao(LocalDateTime.now());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        marcaRepository.save(marca);
+        return new ResponseEntity<>(marca, HttpStatus.OK);
     }
 
-    public ResponseEntity deletarMarca(UUID id){
-        Marca marca = marcaRepository.findById(id).orElse(null);
-
-        if(marca == null){
+    public ResponseEntity<Marca> deletarMarca(UUID id){
+        if(marcaRepository.findById(id).orElse(null) == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         marcaRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
-
