@@ -18,9 +18,7 @@ public class EnderecoService {
     @Autowired EnderecoRepository enderecoRepository;
 
     public ResponseEntity<EnderecoTO> buscarEndereco(String cep) {
-        System.out.println(cep);
         EnderecoViaCepTO enderecoViaCep = viaCepAdapter.consultarCep(cep);
-
         EnderecoTO endereco = new EnderecoTO(
                 enderecoViaCep.getCep(),
                 enderecoViaCep.getLogradouro(),
@@ -28,7 +26,6 @@ public class EnderecoService {
                 enderecoViaCep.getLocalidade(),
                 enderecoViaCep.getEstado(),
                 null);
-
 
         return new ResponseEntity<>(endereco, HttpStatus.OK);
     }
@@ -44,6 +41,5 @@ public class EnderecoService {
 
         enderecoRepository.save(endereco);
         return endereco;
-
     }
 }

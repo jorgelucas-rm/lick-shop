@@ -10,7 +10,7 @@ import senac.ads.projeto_integrador_iv.repository.ContaRepository;
 import senac.ads.projeto_integrador_iv.service.LoginService;
 
 @Component
-public class seeder {
+public class    seeder {
 
     @Autowired
     LoginService loginService;
