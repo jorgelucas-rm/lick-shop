@@ -1,5 +1,6 @@
 package senac.ads.projeto_integrador_iv.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 
 import senac.ads.projeto_integrador_iv.dto.ProdutoAtualizadoTO;
 import senac.ads.projeto_integrador_iv.dto.ProdutoTO;
@@ -41,13 +43,14 @@ public class ProdutoService {
         return new ResponseEntity<>(produto, HttpStatus.OK);
     }
 
-    public ResponseEntity<Produto> salvarProduto(ProdutoTO novoProduto){
+    public ResponseEntity<Produto> salvarProduto(ProdutoTO novoProduto) throws IOException {
         if (produtoRepository.findByNome(novoProduto.getNome()) != null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Produto produto = new Produto();
 
         produto.setNome(novoProduto.getNome());
+        produto.setImagemList(novoProduto.getImagens());
         produto.setDescricaoCurta(novoProduto.getDescricaoCurta());
         produto.setDescricaoDetalhada(novoProduto.getDescricaoDetalhada());
         produto.setValorCusto(novoProduto.getValorCusto());
@@ -69,6 +72,7 @@ public class ProdutoService {
         }
 
         produto.setNome(atualizacaoProduto.getNome());
+        produto.setImagemList(atualizacaoProduto.getImagens());
         produto.setDescricaoCurta(atualizacaoProduto.getDescricaoCurta());
         produto.setDescricaoDetalhada(atualizacaoProduto.getDescricaoDetalhada());
         produto.setValorCusto(atualizacaoProduto.getValorCusto());
