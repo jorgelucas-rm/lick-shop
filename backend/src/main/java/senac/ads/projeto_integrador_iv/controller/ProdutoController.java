@@ -1,5 +1,6 @@
 package senac.ads.projeto_integrador_iv.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Produto> criarProduto(@RequestBody ProdutoTO produto){
+    public ResponseEntity<Produto> criarProduto(@RequestBody ProdutoTO produto) throws IOException {
         return produtoService.salvarProduto(produto);
     }
 
