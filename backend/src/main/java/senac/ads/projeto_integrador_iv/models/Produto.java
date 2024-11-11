@@ -1,6 +1,7 @@
 package senac.ads.projeto_integrador_iv.models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -18,6 +19,10 @@ public class Produto {
     private UUID id;
 
     private String nome;
+
+    @Lob
+    @ElementCollection
+    private List<byte[]> imagemList;
 
     @ManyToOne
     private Marca marca;
