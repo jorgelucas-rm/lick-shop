@@ -33,6 +33,9 @@ public class Conta implements UserDetails {
 
     private LocalDateTime dataAtualizacao;
 
+    @OneToOne(mappedBy = "conta")
+    private Usuario usuarioRelacionado;
+
     @Override
     public String getUsername() {
         return this.usuario;

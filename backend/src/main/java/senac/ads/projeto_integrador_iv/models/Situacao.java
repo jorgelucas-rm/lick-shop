@@ -12,8 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 public enum Situacao {
-    someSituation("someSituation"),
-    someSituationtoo("someSituationtoo");
+    Pendente("Pendente"),
+    Pago("Pago");
 
     private String situacao;
 }

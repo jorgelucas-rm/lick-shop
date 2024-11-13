@@ -6,7 +6,7 @@ import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.resources.preference.Preference;
 import org.springframework.stereotype.Service;
-import senac.ads.projeto_integrador_iv.models.Carrinho;
+import senac.ads.projeto_integrador_iv.models.Usuario;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class PagamentoService {
+        public String criarLinkDePagamento(Usuario usuario) throws Exception {
 
-    public String criarLinkDePagamento(Carrinho carrinho) throws Exception {
-        List<PreferenceItemRequest> items = carrinho.getProdutos().stream().map(produto ->
+        List<PreferenceItemRequest> items = usuario.getCarrinho().stream().map(produto ->
                 PreferenceItemRequest.builder()
                         .title(produto.getNome())
                         .quantity(1)
