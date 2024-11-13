@@ -17,6 +17,8 @@ public class Pedido {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigo;
 
+    private String linkPagamento;
+
     @OneToOne
     private Usuario dono;
 

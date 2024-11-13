@@ -2,19 +2,17 @@ package senac.ads.projeto_integrador_iv.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import senac.ads.projeto_integrador_iv.service.PedidoService;
 
-
-@RestController
-@RequestMapping("/api/v1/checkout")
-public class CheckoutController {
+public class CarrinhoCrontroller {
 
     @Autowired
     PedidoService pedidoService;
 
-    @GetMapping("/gerarPedido")
+
+    @PostMapping("/gerarPedido")
     public ResponseEntity<String> criarLinkDePagamento(@RequestHeader("Authorization") String authorizationHeader) {
         return pedidoService.gerarPedido(authorizationHeader);
     }

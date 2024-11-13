@@ -29,4 +29,7 @@ public class Usuario {
 
     @OneToOne
     private Conta conta;
+
+    @OneToMany
+    private List<Produto> carrinho;
 }
