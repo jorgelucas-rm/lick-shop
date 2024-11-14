@@ -7,8 +7,8 @@ services:
     environment:
       - MYSQL_DATABASE=dev_database
       - MYSQL_ROOT_PASSWORD=admin
-    ports:
-      - '3306:3306'
+    # ports:
+    #   - '3306:3306'
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - mysql-data:/var/lib/mysql
@@ -26,7 +26,7 @@ services:
       db:
         condition: service_healthy  # Corrigido para não ter os dois pontos
     ports:
-      - '8080:8080'
+      - '9921:8080'
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/dev_database
       - SPRING_DATASOURCE_USERNAME=root
