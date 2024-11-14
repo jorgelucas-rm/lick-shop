@@ -24,7 +24,7 @@ services:
     restart: always
     depends_on:
       db:
-        condition: service_healthy  # Corrigido para não ter os dois pontos
+        condition: service_healthy
     ports:
       - '9921:8080'
     environment:
@@ -33,4 +33,4 @@ services:
       - SPRING_DATASOURCE_PASSWORD=admin
 
 volumes:
-  mysql-data:  # Definindo um volume para persistência de dados
+  mysql-data:

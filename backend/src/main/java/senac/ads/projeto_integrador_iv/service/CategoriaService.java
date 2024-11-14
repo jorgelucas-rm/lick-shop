@@ -1,5 +1,6 @@
 package senac.ads.projeto_integrador_iv.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import senac.ads.projeto_integrador_iv.dto.CategoriaTO;
 import senac.ads.projeto_integrador_iv.models.Categoria;
 import senac.ads.projeto_integrador_iv.repository.CategoriaRepository;
 
@@ -30,10 +32,13 @@ public class CategoriaService {
         return new ResponseEntity<>(categoria, HttpStatus.OK);
     }
 
-    public ResponseEntity salvarCategoria(Categoria novaCategoria){
-        System.out.println(novaCategoria.getNome());
-        System.out.println(novaCategoria.getId());
-        categoriaRepository.save(novaCategoria);
+    public ResponseEntity salvarCategoria(CategoriaTO novaCategoria){
+        Categoria categoria = new Categoria();
+        categoria.setNome(novaCategoria.getNome());
+        categoria.setDataCriacao(LocalDateTime.now());
+        categoria.setDataAtualizacao(LocalDateTime.now());
+
+        categoriaRepository.save(categoria);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
