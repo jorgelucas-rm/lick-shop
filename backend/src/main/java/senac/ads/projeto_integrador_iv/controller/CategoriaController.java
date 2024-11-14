@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import senac.ads.projeto_integrador_iv.dto.CategoriaTO;
 import senac.ads.projeto_integrador_iv.models.Categoria;
 import senac.ads.projeto_integrador_iv.service.CategoriaService;
 
@@ -28,7 +29,7 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity criarCategoria(@RequestBody Categoria categoria){
+    public ResponseEntity criarCategoria(@RequestBody CategoriaTO categoria){
         return categoriaService.salvarCategoria(categoria);
     }
 
