@@ -14,12 +14,5 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoriaTO {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
-
     private String nome;
-
-    private LocalDateTime dataCriacao;
-
-    private LocalDateTime dataAtualizacao;
 }
