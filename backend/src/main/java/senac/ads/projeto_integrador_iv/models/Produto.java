@@ -22,6 +22,8 @@ public class Produto {
 
     @Lob
     @ElementCollection
+    @CollectionTable(name = "produto_imagens", joinColumns = @JoinColumn(name = "produto_id"))
+    @Column(name = "imagem", columnDefinition = "LONGBLOB")
     private List<byte[]> imagemList;
 
     @ManyToOne
@@ -32,6 +34,8 @@ public class Produto {
 
     private String descricaoCurta;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String descricaoDetalhada;
 
     private double valorCusto;
