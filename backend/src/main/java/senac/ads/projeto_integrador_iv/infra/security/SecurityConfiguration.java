@@ -28,12 +28,13 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/uploads/images/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/v1/login").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/api/v1/endereco/*", "/api/v1/produto").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/endereco/*", "/api/v1/produto", "/api/v1/categoria", "/api/v1/marca").permitAll()
                         .requestMatchers(HttpMethod.GET).authenticated()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/categoria", "/api/v1/marca").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET).hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/api/v1/usuario").permitAll()
                         .requestMatchers(HttpMethod.POST).authenticated()
@@ -43,7 +44,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT, "/api/v1/categoria", "/api/v1/marca", "/api/v1/produto").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/usuario").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/categoria", "/api/v1/marca", "/api/v1/produto").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/categoria", "/api/v1/marca", "/api/v1/produto/*").hasRole("ADMIN")
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

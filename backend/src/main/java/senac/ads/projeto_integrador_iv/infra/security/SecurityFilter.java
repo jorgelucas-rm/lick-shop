@@ -19,10 +19,10 @@ import java.io.IOException;
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
-    TokenService tokenService;
+    private TokenService tokenService;
 
     @Autowired
-    ContaRepository contaRepository;
+    private ContaRepository contaRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -45,6 +45,5 @@ public class SecurityFilter extends OncePerRequestFilter {
             return null;
         }
         return authHeader.replace("Bearer ", "");
-
     }
 }

@@ -50,7 +50,7 @@ public class UsuarioService {
     public ResponseEntity<Usuario> salvarUsuario(UserTO userTO, EnderecoTO enderecoTO, RegisterTO registerTO) {
 
         if(
-            usuarioRepository.findByCpf(userTO.getCpf()) != null ||
+            usuarioRepository.findByCpf(userTO.getCpf()).isPresent() ||
             contaRepository.findByUsuario(registerTO.getUsuario()) != null ||
             contaRepository.findByEmail(registerTO.getEmail()) != null){
 

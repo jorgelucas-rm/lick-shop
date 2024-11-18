@@ -1,36 +1,38 @@
-version: '3.8'
-services:
-  db:
-    image: mysql/mysql-server:latest
-    container_name: my-mysql
-    restart: always
-    environment:
-      - MYSQL_DATABASE=dev_database
-      - MYSQL_ROOT_PASSWORD=admin
-    # ports:
-    #   - '3306:3306'
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - mysql-data:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+  version: '3.8'
+  services:
+    db:
+      image: mysql/mysql-server:latest
+      container_name: my-mysql
+      restart: always
+      environment:
+        - MYSQL_DATABASE=dev_database
+        - MYSQL_ROOT_PASSWORD=admin
+      # ports:
+      #   - '3306:3306'
+      volumes:
+        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+        - mysql-data:/var/lib/mysql
+      healthcheck:
+        test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+        interval: 10s
+        timeout: 5s
+        retries: 5
 
-  app:
-    build: .
-    container_name: spring-app
-    restart: always
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - '9921:8080'
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/dev_database
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=admin
+    app:
+      build: .
+      container_name: spring-app
+      restart: always
+      depends_on:
+        db:
+          condition: service_healthy
+      ports:
+        - '9921:8080'
+      volumes:
+        - ./uploads/images:/app/uploads/images
+      environment:
+        - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/dev_database
+        - SPRING_DATASOURCE_USERNAME=root
+        - SPRING_DATASOURCE_PASSWORD=admin
 
-volumes:
-  mysql-data:
+  volumes:
+    mysql-data:
