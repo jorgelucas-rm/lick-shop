@@ -2,16 +2,16 @@ package senac.ads.projeto_integrador_iv.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import java.util.List;
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProdutoTO {
 
     private String nome;
-
-    private List<byte[]> imagens;
 
     private UUID marcaId;
 

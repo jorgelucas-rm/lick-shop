@@ -20,16 +20,12 @@ public class Produto {
 
     private String nome;
 
-    @Lob
-    @ElementCollection
-    @CollectionTable(name = "produto_imagens", joinColumns = @JoinColumn(name = "produto_id"))
-    @Column(name = "imagem", columnDefinition = "LONGBLOB")
-    private List<byte[]> imagemList;
+    private List<String> imagemList;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, optional = true)
     private Marca marca;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, optional = true)
     private Categoria categoria;
 
     private String descricaoCurta;
