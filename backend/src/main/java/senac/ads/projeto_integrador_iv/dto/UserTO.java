@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class UserTO {
     private String nome;
 
-    private long cpf;
+    private String cpf;
 
     private String nascimento;
 
