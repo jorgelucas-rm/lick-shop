@@ -20,7 +20,7 @@ public class Usuario {
 
     private String nome;
 
-    private Long cpf;
+    private String cpf;
 
     private String nascimento;
 
