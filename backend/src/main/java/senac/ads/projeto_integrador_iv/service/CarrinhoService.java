@@ -1,3 +1,5 @@
+/*
+
 package senac.ads.projeto_integrador_iv.service;
 
 import com.mercadopago.resources.user.User;
@@ -75,3 +77,4 @@ public class CarrinhoService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
+*/
