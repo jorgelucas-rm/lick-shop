@@ -160,7 +160,7 @@ export default {
     getImageUrl(product) {
       return (
         product?.imagemList?.[0] ||
-        "https://api.lickshop.acilab.com.br/uploads/images/default.jpeg"
+        "https://207.244.237.78:9921/uploads/images/default.jpeg"
       );
     },
     changePage(direction) {
