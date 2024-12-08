@@ -1,38 +1,48 @@
-  version: '3.8'
-  services:
-    db:
-      image: mysql/mysql-server:latest
-      container_name: my-mysql
-      restart: always
-      environment:
-        - MYSQL_DATABASE=dev_database
-        - MYSQL_ROOT_PASSWORD=admin
-      # ports:
-      #   - '3306:3306'
-      volumes:
-        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-        - mysql-data:/var/lib/mysql
-      healthcheck:
-        test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-        interval: 10s
-        timeout: 5s
-        retries: 5
+services:
+  database:
+    image: mysql/mysql-server:latest
+    container_name: my-mysql
+    restart: always
+    environment:
+      - MYSQL_DATABASE=dev_database
+      - MYSQL_ROOT_PASSWORD=admin
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vue-frontend
+    ports:
+      - '9922:80'  # Mapeando a porta 80 do container para a porta 9922 do host
+    depends_on:
+      - backend  # Se o frontend depende do backend, adicione esta linha
 
-    app:
-      build: .
-      container_name: spring-app
-      restart: always
-      depends_on:
-        db:
-          condition: service_healthy
-      ports:
-        - '9921:8080'
-      volumes:
-        - ./uploads/images:/app/uploads/images
-      environment:
-        - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/dev_database
-        - SPRING_DATASOURCE_USERNAME=root
-        - SPRING_DATASOURCE_PASSWORD=admin
 
-  volumes:
-    mysql-data:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: spring-app
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - '9921:8080'
+    volumes:
+      - ./uploads/images:/app/uploads/images
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://database:3306/dev_database
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=admin
+
+volumes:
+  mysql-data:
