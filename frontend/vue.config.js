@@ -6,7 +6,7 @@ module.exports = defineConfig({
     port: 9922, // Define a porta do servidor de desenvolvimento
     proxy: {
       '/api': {
-        target: 'backend:8080', // O endereço da sua API
+        target: 'https://207.244.237.78:9921', // O endereço da sua API
         changeOrigin: true, // Muda a origem da requisição para evitar CORS
         pathRewrite: {
           '^/api': '', // Remove '/api' do início da URL da requisição
