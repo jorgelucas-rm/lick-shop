@@ -2,7 +2,7 @@
   <header class="navbar navbar-expand-lg navbar-dark" style="background-color: #000000; border-bottom: 1px solid #ff0000;">
     <div class="container-fluid">
       <!-- Logo e Nome da Loja -->
-      <router-link class="navbar-brand d-flex align-items-center" to="/home">
+      <router-link class="navbar-brand d-flex align-items-center" to="/">
         <img src="@/assets/logo.png" alt="Logo" class="logo me-2" />
         <img src="@/assets/nome.png" alt="Nome da Loja" class="nome" />
       </router-link>
@@ -29,14 +29,21 @@
             class="form-control SearchInput"
             placeholder="Digite o que deseja buscar"
             v-model="searchQuery"
-            @keyup.enter="handleSearch"
+            @keyup="handleSearch"
           />
+          
+          <!-- Lista de Produtos Sugeridos -->
+          <ul v-if="suggestedProducts.length" class="suggestions-list">
+            <li v-for="product in suggestedProducts" :key="product.id" @click="goToProductDetail(product)">
+              {{ product.nome }}
+            </li>
+          </ul>
         </div>
 
         <!-- Navegação -->
         <ul class="navbar-nav ms-auto">
           <li class="nav-item d-flex align-items-center">
-            <router-link class="nav-link navigationpill" to="/waystocontact">Formas de Contato</router-link>
+            <router-link class="nav-link navigationpill" to="/contact">Formas de Contato</router-link>
             <div class="RedLine"></div>
           </li>
           <li class="nav-item d-flex align-items-center">
@@ -81,21 +88,50 @@
 </template>
 
 <script>
+import api from "@/services/api"; // Certifique-se de ajustar a URL da API conforme necessário
+
 export default {
   data() {
     return {
       searchQuery: "",
+      suggestedProducts: [],
       isLoggedIn: false,
       userName: "",
       cartItems: 0,
     };
   },
   methods: {
-    handleSearch() {
+    async handleSearch() {
       if (this.searchQuery.trim()) {
-        console.log("Buscando por:", this.searchQuery);
-        // Aqui você pode adicionar a lógica para enviar a busca para a API ou realizar outra ação
+        // Chama a API para buscar produtos que combinem com o nome digitado
+        try {
+          const response = await this.fetchProductsByName(this.searchQuery);
+          this.suggestedProducts = response.data || [];
+        } catch (error) {
+          console.error("Erro ao buscar produtos:", error);
+        }
+      } else {
+        this.suggestedProducts = [];
       }
+    },
+    
+    // Método para buscar produtos pela API
+    async fetchProductsByName(query) {
+      try {
+        const response = await api.get(`/api/v1/produto/search`, {
+          params: { nome: query },
+        });
+        return response;
+      } catch (error) {
+        console.error("Erro na busca de produtos:", error);
+        return { data: [] };
+      }
+    },
+
+    // Método para redirecionar para a página de detalhes do produto
+    goToProductDetail(product) {
+      this.$router.push(`/details/${product.id}`);
+      this.suggestedProducts = []; // Limpa as sugestões após o clique
     },
   },
 };
@@ -124,6 +160,7 @@ body {
 }
 
 .SearchBar {
+  position: relative;
   margin-left: 1rem;
   margin-right: 1rem;
   flex: 1;
@@ -145,6 +182,33 @@ body {
   color: #ccc;
 }
 
+/* Lista de Sugestões */
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 5px;
+  padding: 0;
+  list-style-type: none;
+}
+
+.suggestions-list li {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.suggestions-list li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Navegação */
 .navigationpill {
   color: #f3f3f3;
   text-decoration: none;
