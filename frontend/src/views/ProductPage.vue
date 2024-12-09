@@ -6,12 +6,10 @@
       </div>
 
       <div class="row">
-        <!-- Sidebar para Filtros -->
         <aside class="col-lg-3 mb-4">
           <div class="card shadow-sm">
             <div class="card-body">
               <h4>Filtros</h4>
-              <!-- Categoria -->
               <div class="mb-3">
                 <label for="categoryFilter" class="form-label">Categorias</label>
                 <select
@@ -96,7 +94,6 @@
             </div>
           </div>
 
-          <!-- Paginação -->
           <nav v-if="paginatedProducts.length > 0" class="mt-4">
             <ul class="pagination justify-content-center">
               <li class="page-item" :class="{ disabled: currentPage === 1 }">
@@ -233,7 +230,7 @@ export default {
 }
 
 .card-img-top {
-  object-fit: contain; /* Ajusta a imagem sem cortar */
+  object-fit: contain; 
   width: 100%;
   height: 100%;
 }
@@ -264,7 +261,7 @@ export default {
 }
 
 body {
-  background-color: #ffe4e1; /* Fundo rosa */
+  background-color: #ffe4e1;
   animation: fadeIn 1.5s ease;
 }
 

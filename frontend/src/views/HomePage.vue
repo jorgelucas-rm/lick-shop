@@ -45,9 +45,9 @@
             <img class="filter-icon" src="@/assets/dildo.png" alt="Vibradores" />
             <span class="filter-text">Vibradores</span>
           </router-link>
-          <router-link to="/products?category=Lubrificantes" class="filter-item fundo-lubrificantes">
+          <router-link to="/products?category=Lubrificante" class="filter-item fundo-lubrificantes">
             <img class="filter-icon" src="@/assets/lubrificante.png" alt="Lubrificantes" />
-            <span class="filter-text">Lubrificantes</span>
+            <span class="filter-text">Lubrificante</span>
           </router-link>
         </div>
       </section>
