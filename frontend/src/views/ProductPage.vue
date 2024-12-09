@@ -100,13 +100,22 @@
           <nav v-if="paginatedProducts.length > 0" class="mt-4">
             <ul class="pagination justify-content-center">
               <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                <button class="page-link" @click="changePage('prev')">Anterior</button>
-              </li>
-              <li class="page-item disabled">
-                <span class="page-link">Página {{ currentPage }} de {{ totalPages }}</span>
+                <button
+                  class="page-link"
+                  @click="changePage('prev')"
+                  :disabled="currentPage === 1"
+                >
+                  Anterior
+                </button>
               </li>
               <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                <button class="page-link" @click="changePage('next')">Próxima</button>
+                <button
+                  class="page-link"
+                  @click="changePage('next')"
+                  :disabled="currentPage === totalPages"
+                >
+                  Próximo
+                </button>
               </li>
             </ul>
           </nav>
@@ -125,13 +134,23 @@ export default {
     return {
       products: [],
       filteredProducts: [],
-      categories: ["Vestimentas", "Bdsm", "Vibradores", "Lubrificantes"],
-      brands: ["Marca A", "Marca B", "Marca C", "Marca D"],
-      selectedCategory: "",
+      categories: ["Preservativos", "Bdsm", "Vibradores", "Lubrificante"],
+      brands: [
+          "La Pimenta",
+          "Hot Flower",
+          "Satisfaction",
+          "Sexy Fantasy",
+          "Olla",
+          "K-Med",
+          "Jontex",
+          "Peper Blend",
+          "DemiLove"
+        ],
+      selectedCategory: this.$route.query.category || "",
       selectedBrand: "",
       priceRange: 5000,
       currentPage: 1,
-      itemsPerPage: 20, // 5 linhas x 4 colunas = 20 itens por página
+      itemsPerPage: 20,
       errorMessage: "",
     };
   },
@@ -151,6 +170,7 @@ export default {
         const response = await api.get("/api/v1/produto");
         this.products = response.data || [];
         this.filteredProducts = this.products;
+        this.filterProducts();
       } catch (error) {
         this.errorMessage =
           "Erro ao carregar os produtos. Tente novamente mais tarde.";
@@ -160,7 +180,7 @@ export default {
     getImageUrl(product) {
       return (
         product?.imagemList?.[0] ||
-        "https://207.244.237.78:9921/uploads/images/default.jpeg"
+        "http://207.244.237.78:9921/uploads/images/default.jpeg"
       );
     },
     changePage(direction) {
@@ -169,7 +189,7 @@ export default {
       } else if (direction === "prev" && this.currentPage > 1) {
         this.currentPage--;
       }
-      window.scrollTo(0, 0); // Voltar para o topo da página ao mudar de página
+      window.scrollTo(0, 0);
     },
     filterProducts() {
       this.filteredProducts = this.products.filter((product) => {
@@ -192,8 +212,15 @@ export default {
   mounted() {
     this.loadProducts();
   },
+  watch: {
+    "$route.query.category": function(newCategory) {
+      this.selectedCategory = newCategory || "";
+      this.filterProducts();
+    },
+  },
 };
 </script>
+
 
 <style scoped>
 .card-img-top-container {

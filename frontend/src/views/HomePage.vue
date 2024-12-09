@@ -1,23 +1,22 @@
-<template> 
+<template>
   <div class="home-page">
     <!-- Carrossel -->
-    <div class="carousel">
+    <div class="carousel position-relative">
       <div class="carousel-arrow left" @click="prevSlide">&#10094;</div>
       <div class="carousel-arrow right" @click="nextSlide">&#10095;</div>
       <div class="carousel-wrapper" :style="carouselStyle">
         <img
           v-for="(slide, index) in slides"
           :key="index"
-          :src="slide"
+          :src="slide.image"
           :alt="'Slide ' + (index + 1)"
-          class="banner-image"
+          class="banner-image img-fluid"
         />
       </div>
     </div>
 
     <!-- Conteúdo Centralizado -->
     <div class="central-box">
-      <!-- Título -->
       <h1 class="title">DESTAQUES QUENTES</h1>
 
       <!-- Cards de Produtos Principais -->
@@ -34,23 +33,22 @@
       <!-- Filtros Rápidos -->
       <section class="quick-filters">
         <div class="filter-container">
-          <router-link to="/products/vestimentas" class="filter-item fundo-vestimentas">
-            <img class="filter-icon" src="@/assets/vestimentas.png" alt="Vestimentas" />
-            <span class="filter-text">Vestimentas</span>
+          <router-link to="/products?category=Preservativos" class="filter-item fundo-vestimentas">
+            <img class="filter-icon" src="@/assets/preservativos.png" alt="Preservativos" />
+            <span class="filter-text">Preservativos</span>
           </router-link>
-          <router-link to="/products/bdsm" class="filter-item fundo-bdsm">
+          <router-link to="/products?category=Bdsm" class="filter-item fundo-bdsm">
             <img class="filter-icon" src="@/assets/bdsm.png" alt="BDSM" />
             <span class="filter-text">BDSM</span>
           </router-link>
-          <router-link to="/products/dildos" class="filter-item fundo-dildo">
-            <img class="filter-icon" src="@/assets/dildo.png" alt="Dildos" />
+          <router-link to="/products?category=Vibradores" class="filter-item fundo-dildo">
+            <img class="filter-icon" src="@/assets/dildo.png" alt="Vibradores" />
             <span class="filter-text">Vibradores</span>
           </router-link>
-          <router-link to="/products/lubrificantes" class="filter-item fundo-lubrificantes">
+          <router-link to="/products?category=Lubrificantes" class="filter-item fundo-lubrificantes">
             <img class="filter-icon" src="@/assets/lubrificante.png" alt="Lubrificantes" />
             <span class="filter-text">Lubrificantes</span>
           </router-link>
-
         </div>
       </section>
 
@@ -72,14 +70,18 @@
 </template>
 
 <script>
+import banner1 from "@/assets/banner1.png";
+import banner2 from "@/assets/banner2.png";
+import banner3 from "@/assets/banner3.png";
+
 export default {
   data() {
     return {
       currentSlide: 0,
       slides: [
-        "@/GIT/lickshop/src/assets/banner1.jpg",
-        "https://via.placeholder.com/1360x400?text=Promoção+2",
-        "https://via.placeholder.com/1360x400?text=Promoção+3",
+        { image: banner1 },
+        { image: banner2 },
+        { image: banner3 },
       ],
       products: [], // Deve ser carregado via API
     };
@@ -102,6 +104,12 @@ export default {
       return product?.image || "https://via.placeholder.com/150";
     },
   },
+  mounted() {
+    // Mudar slide automaticamente a cada 5 segundos
+    setInterval(() => {
+      this.nextSlide();
+    }, 5000);
+  },
 };
 </script>
 
@@ -115,9 +123,11 @@ export default {
 
 .carousel {
   position: relative;
-  height: 400px;
+  margin: 0 auto;
   margin-bottom: 20px;
   overflow: hidden;
+  border-radius: 10px;
+  width: 70%;
 }
 
 .carousel-wrapper {
@@ -127,8 +137,9 @@ export default {
 
 .banner-image {
   width: 100%;
-  height: 400px;
+  height: 100%;
   object-fit: cover;
+  border-radius: 10px;
 }
 
 .carousel-arrow {
@@ -155,15 +166,15 @@ export default {
   background-color: #ffe4e1;
   padding: 20px;
   margin: 0 auto;
-  width: 80%;
+  width: 90%;
   height: 1000px;
-  margin-bottom: 1%
+  margin-bottom: 1%;
 }
 
 .title {
   font-size: 24px;
-  margin-top: 0%;
-  padding: 0%;
+  margin-top: 0;
+  padding: 0;
   text-align: start;
   margin-bottom: 10px;
   border-radius: 5px;
@@ -175,16 +186,8 @@ export default {
   word-spacing: 5px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
   background-color: #b00003;
 }
-
-.subtitle {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #d30000;
-}
-
 
 .product-highlight,
 .additional-products {
@@ -201,6 +204,7 @@ export default {
   padding: 10px;
   border-radius: 5px;
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .product-image {
@@ -219,8 +223,8 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   background: #d30000;
   border-radius: 10px;
   color: white;
@@ -261,5 +265,65 @@ export default {
 .view-all-button:hover {
   background-color: #ffe4e1;
   color: white;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .carousel {
+    height: 250px;
+  }
+
+  .central-box {
+    width: 95%;
+  }
+
+  .title {
+    font-size: 20px;
+    padding: 5px;
+  }
+
+  .product-card {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .filter-item {
+    width: 45%;
+    height: 180px;
+  }
+
+  .quick-filters .filter-container {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel {
+    height: 200px;
+  }
+
+  .central-box {
+    width: 100%;
+    height: auto;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .product-card {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .filter-item {
+    width: 45%;
+    height: 150px;
+  }
+
+  .view-all-button {
+    width: 180px;
+  }
 }
 </style>

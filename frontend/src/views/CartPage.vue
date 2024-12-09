@@ -1,49 +1,41 @@
 <template>
-    <div class="cart-page">
-      <h1>Carrinho de Compras</h1>
-      <div v-if="cartItems.length === 0">
-        <p>Seu carrinho está vazio.</p>
-      </div>
-      <div v-else>
-        <div class="cart-items">
-          <CartItem
-            v-for="item in cartItems"
-            :key="item.id"
-            :item="item"
-            @remove="removeItemFromCart"
-          />
-        </div>
-        <div class="cart-summary">
-          <h2>Resumo do Pedido</h2>
-          <p>Total: R$ {{ totalAmount.toFixed(2) }}</p>
-          <button @click="checkout">Finalizar Compra</button>
-        </div>
-      </div>
-    </div>
-  </template>
-  
-  <script>
-  </script>
-  
-  <style scoped>
-  .cart-page {
-    padding: 20px;
-  }
-  .cart-items {
-    margin-bottom: 20px;
-  }
-  .cart-summary {
-    margin-top: 20px;
-  }
-  .cart-summary button {
-    padding: 10px;
-    background-color: #ff4081;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  .cart-summary button:hover {
-    background-color: #e60073;
-  }
-  </style>
-  
+  <div class="cart-item">
+    <p>{{ item.nome }}</p>
+    <p>Quantidade: {{ item.quantidade }}</p>
+    <!-- Verifica se valorVenda é um número válido antes de usar toFixed -->
+    <p>Preço: R$ {{ item.valorVenda && !isNaN(item.valorVenda) ? item.valorVenda.toFixed(2) : 'Indisponível' }}</p>
+    <button @click="removeItem">Remover</button>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "CartItem",
+  props: {
+    item: Object,
+  },
+  methods: {
+    removeItem() {
+      this.$emit("remove", this.item.id); // Emite o ID do item para o componente pai
+    },
+  },
+};
+</script>
+
+<style scoped>
+.cart-item {
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+.cart-item button {
+  background-color: #ff4081;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.cart-item button:hover {
+  background-color: #e60073;
+}
+</style>

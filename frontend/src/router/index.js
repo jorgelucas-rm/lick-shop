@@ -9,9 +9,15 @@ import DetailsPage from '@/views/DetailsPage.vue';
 import ProfilePage from '@/views/ProfilePage.vue';
 import AdmPage from '@/views/AdmPage.vue';
 import AdmProductPage from '@/views/AdmProductPage.vue';
+import AboutPage from '@/views/AboutUs.vue';
+import CookieNotice from '@/views/CookieNotice.vue';
+import AboutAds from '@/views/AboutAds.vue';
+import UseConditions from '@/views/UseConditions.vue';
+import WarningPrivacity from '@/views/WarningPrivacity.vue';
+import ContactPage from '@/views/ContactPage.vue';
 import CartPage from '@/views/CartPage.vue';
 import NotFound from '@/views/NotFoundPage.vue';
-import localStorageService from '@/services/localStorage'; // Para verificar o token
+import localStorageService from '@/services/localStorage'; 
 
 // Função para verificar se o usuário está autenticado
 const isAuthenticated = () => {
@@ -30,7 +36,7 @@ const requiresAuth = (to, from, next) => {
 // Definindo as rotas
 const routes = [
   {
-    path: '/home',
+    path: '/',
     name: 'Home',
     component: Home,
   },
@@ -89,6 +95,36 @@ const routes = [
     name: 'AdmProductPage',
     component: AdmProductPage,
     //beforeEnter: requiresAuth, // Verifica se o usuário está autenticado
+  },
+  {
+    path: '/cookies',
+    name: 'CookieNotice',
+    component: CookieNotice,
+  },
+  {
+    path: '/ads',
+    name: 'AboutAds',
+    component: AboutAds,
+  },
+  {
+    path: '/useconditions',
+    name: 'UseConditions',
+    component: UseConditions,
+  },
+  {
+    path: '/privacy',
+    name: 'WarningPrivacity',
+    component: WarningPrivacity,
+  },
+  {
+    path: '/contact',
+    name: 'ContactPage',
+    component: ContactPage,
+  },
+  {
+    path: '/aboutus',
+    name: 'AboutPage',
+    component: AboutPage,
   },
   {
     path: '/cart',

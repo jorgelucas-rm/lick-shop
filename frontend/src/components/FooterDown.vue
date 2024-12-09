@@ -15,7 +15,7 @@
             <router-link to="/useconditions" class="links">Condições de Uso</router-link>
             <router-link to="/privacy" class="links">Aviso de Privacidade</router-link>
             <router-link to="/cookies" class="links">Aviso sobre cookies</router-link>
-            <router-link to="/interestbasedads" class="links">Anúncios baseados em interesses</router-link>
+            <router-link to="/ads" class="links">Anúncios baseados em interesses</router-link>
           </p>
         </div>
 
