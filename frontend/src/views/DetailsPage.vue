@@ -148,6 +148,7 @@ export default {
 
 .wishlist-button:hover {
   background: #ffbf00;
+
 }
 
 /* Estilo de Carregamento */

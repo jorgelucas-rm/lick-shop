@@ -289,5 +289,6 @@ export default {
   font-size: 20px;
   color: #d30000;
   margin-top: 20px;
+
 }
 </style>

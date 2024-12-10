@@ -31,6 +31,7 @@
             :class="{ active: keepMeConnected }" 
             @click="toggleKeepMeConnected"
           >
+
             <div class="HandleShape"></div>
           </div>
         </div>
@@ -52,6 +53,7 @@
 import api from '@/services/api';
 import localStorageService from '@/services/localStorage';
 import { authStore } from '@/services/AuthStore'; // Se você estiver usando authStore
+
 
 export default {
   data() {
@@ -223,6 +225,7 @@ export default {
 .AindaNOTemContaCriarConta {
   font-size: 1rem;
   text-align: center;
+  margin-top: 15px;
 }
 
 .button {

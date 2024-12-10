@@ -19,6 +19,7 @@ import CartPage from '@/views/CartPage.vue';
 import NotFound from '@/views/NotFoundPage.vue';
 import { authStore } from '@/services/AuthStore'; // Importando o authStore
 
+
 // Função para verificar se o usuário está autenticado
 const isAuthenticated = () => {
   return authStore.isLoggedIn; // Usa o estado do authStore para verificar se está logado

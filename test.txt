@@ -1,0 +1,2 @@
+testando script de carregamento automático
+..
