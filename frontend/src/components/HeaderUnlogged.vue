@@ -15,7 +15,7 @@
         data-bs-target="#navbarContent"
         aria-controls="navbarContent"
         aria-expanded="false"
-        aria-label="Toggle navigation"
+        aria-label="Alternar navegação"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -78,8 +78,12 @@
           >
             Registrar
           </router-link>
-          <div v-else class="text-white me-3">
-            Bem-vindo, <strong>{{ userName }}</strong>
+          <!-- Exibe 'Perfil' e 'Sair' quando o usuário está logado -->
+          <div v-else>
+            <router-link to="/profile" class="btn btn-light me-2">Perfil</router-link>
+            <button @click="logout" class="btn btn-outline-light">
+              Sair
+            </button>
           </div>
         </div>
       </div>
@@ -97,13 +101,23 @@ export default {
       suggestedProducts: [],
       isLoggedIn: false,
       userName: "",
+
       cartItems: 0,
     };
+  },
+  computed: {
+    // Acessa o estado de login diretamente do authStore
+    isLoggedIn() {
+      return authStore.isLoggedIn;
+    },
+    // Acessa o nome do usuário para exibir na navbar
+    userName() {
+      return authStore.userName || "Usuário"; // Use o estado global para o nome
+    },
   },
   methods: {
     async handleSearch() {
       if (this.searchQuery.trim()) {
-        // Chama a API para buscar produtos que combinem com o nome digitado
         try {
           const response = await this.fetchProductsByName(this.searchQuery);
           this.suggestedProducts = response.data || [];
@@ -112,13 +126,15 @@ export default {
         }
       } else {
         this.suggestedProducts = [];
+
       }
     },
     
     // Método para buscar produtos pela API
     async fetchProductsByName(query) {
       try {
-        const response = await api.get(`/api/v1/produto/search`, {
+        const response = await api.get(`/api/v1/produto`, {
+>>>>>>> develop
           params: { nome: query },
         });
         return response;
@@ -132,6 +148,15 @@ export default {
     goToProductDetail(product) {
       this.$router.push(`/details/${product.id}`);
       this.suggestedProducts = []; // Limpa as sugestões após o clique
+    },
+    // Método para logout
+    logout() {
+      // Remove o token do localStorage
+      localStorageService.removeToken();
+      // Atualiza o estado global de login
+      authStore.updateLoginStatus();
+      // Redireciona para a página inicial
+      this.$router.push('/');
     },
   },
 };
@@ -224,5 +249,12 @@ body {
   height: 30px;
   background-color: #ff0000;
   margin: 0 10px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .SearchBar {
+    max-width: 100%;
+  }
 }
 </style>

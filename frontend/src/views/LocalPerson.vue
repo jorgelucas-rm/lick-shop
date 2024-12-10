@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import api from '@/services/api';
 export default {
   data() {
     return {
@@ -89,6 +90,7 @@ export default {
           this.preencherCamposComEndereco(data);
         } else {
           throw new Error("Erro ao buscar CEP");
+
         }
       } catch (error) {
         console.error(error.message);

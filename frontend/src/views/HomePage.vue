@@ -45,9 +45,10 @@
             <img class="filter-icon" src="@/assets/dildo.png" alt="Vibradores" />
             <span class="filter-text">Vibradores</span>
           </router-link>
+
           <router-link to="/products?category=Lubrificantes" class="filter-item fundo-lubrificantes">
             <img class="filter-icon" src="@/assets/lubrificante.png" alt="Lubrificantes" />
-            <span class="filter-text">Lubrificantes</span>
+            <span class="filter-text">Lubrificante</span>
           </router-link>
         </div>
       </section>
@@ -66,6 +67,12 @@
       <!-- Botão para Ver Todos os Produtos -->
       <router-link to="/products" class="view-all-button">Ver Todos os Produtos</router-link>
     </div>
+
+    <!-- Exibição de Mensagem de Erro -->
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <!-- Exibição de Carregamento -->
+    <div v-if="isLoading" class="loading-message">Carregando...</div>
   </div>
 </template>
 
@@ -73,6 +80,7 @@
 import banner1 from "@/assets/banner1.png";
 import banner2 from "@/assets/banner2.png";
 import banner3 from "@/assets/banner3.png";
+import api from "@/services/api";
 
 export default {
   data() {
@@ -83,7 +91,10 @@ export default {
         { image: banner2 },
         { image: banner3 },
       ],
-      products: [], // Deve ser carregado via API
+      products: [], // Produtos que serão carregados da API
+      isLoading: true, // Indicador de carregamento
+      errorMessage: "", // Mensagem de erro
+      carouselInterval: null, // Intervalo do carrossel
     };
   },
   computed: {
@@ -100,8 +111,23 @@ export default {
     nextSlide() {
       this.currentSlide = (this.currentSlide + 1) % this.slides.length;
     },
+    async loadProducts() {
+      this.isLoading = true;
+      try {
+        const response = await api.get("/api/v1/produto");
+        this.products = Array.isArray(response.data) ? response.data : [];
+        this.isLoading = false;
+      } catch (error) {
+        this.errorMessage = "Erro ao carregar os produtos. Tente novamente mais tarde.";
+        this.isLoading = false;
+        console.error("Erro ao carregar produtos:", error);
+      }
+    },
     getImageUrl(product) {
-      return product?.image || "https://via.placeholder.com/150";
+      return (
+        product?.imagemList?.[0] ||
+        "http://207.244.237.78:9921/uploads/images/default.jpeg"
+      );
     },
   },
   mounted() {
@@ -230,41 +256,34 @@ export default {
   color: white;
   font-weight: bold;
   text-align: center;
-}
-
-.fundo-bdsm {
-  background: #b00003;
-}
-
-.fundo-dildo {
-  background: #720002;
-}
-
-.fundo-lubrificantes {
-  background: #420000;
+  padding: 20px;
+  text-decoration: none;
 }
 
 .filter-icon {
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   margin-bottom: 10px;
 }
 
 .view-all-button {
-  display: block;
-  width: 200px;
-  text-align: center;
-  margin: 20px auto;
+  background-color: #e63946;
+  color: white;
   padding: 10px 20px;
-  background-color: white;
-  color: black;
-  text-decoration: none;
   border-radius: 5px;
+  margin-top: 20px;
+  text-decoration: none;
 }
 
-.view-all-button:hover {
-  background-color: #ffe4e1;
-  color: white;
+.error-message {
+  color: red;
+  margin-top: 20px;
+}
+
+.loading-message {
+  font-size: 20px;
+  color: #d30000;
+  margin-top: 20px;
 }
 
 /* Responsividade */

@@ -6,12 +6,10 @@
       </div>
 
       <div class="row">
-        <!-- Sidebar para Filtros -->
         <aside class="col-lg-3 mb-4">
           <div class="card shadow-sm">
             <div class="card-body">
               <h4>Filtros</h4>
-              <!-- Categoria -->
               <div class="mb-3">
                 <label for="categoryFilter" class="form-label">Categorias</label>
                 <select
@@ -68,7 +66,7 @@
             <div v-if="errorMessage" class="alert alert-danger text-center">
               {{ errorMessage }}
             </div>
-            <div v-if="!errorMessage && products.length === 0" class="text-center">
+            <div v-if="!errorMessage && filteredProducts.length === 0" class="text-center">
               Nenhum produto encontrado.
             </div>
             <div
@@ -96,7 +94,6 @@
             </div>
           </div>
 
-          <!-- Paginação -->
           <nav v-if="paginatedProducts.length > 0" class="mt-4">
             <ul class="pagination justify-content-center">
               <li class="page-item" :class="{ disabled: currentPage === 1 }">
@@ -181,6 +178,7 @@ export default {
       return (
         product?.imagemList?.[0] ||
         "http://207.244.237.78:9921/uploads/images/default.jpeg"
+
       );
     },
     changePage(direction) {
@@ -201,12 +199,13 @@ export default {
         const matchesPrice = product.valorVenda <= this.priceRange;
         return matchesCategory && matchesBrand && matchesPrice;
       });
+      this.currentPage = 1; // Reset to first page when filters change
     },
     resetFilters() {
       this.selectedCategory = "";
       this.selectedBrand = "";
       this.priceRange = 5000;
-      this.filteredProducts = this.products;
+      this.filterProducts();
     },
   },
   mounted() {
@@ -214,6 +213,7 @@ export default {
   },
   watch: {
     "$route.query.category": function(newCategory) {
+
       this.selectedCategory = newCategory || "";
       this.filterProducts();
     },
@@ -233,7 +233,7 @@ export default {
 }
 
 .card-img-top {
-  object-fit: contain; /* Ajusta a imagem sem cortar */
+  object-fit: contain; 
   width: 100%;
   height: 100%;
 }
@@ -264,7 +264,7 @@ export default {
 }
 
 body {
-  background-color: #ffe4e1; /* Fundo rosa */
+  background-color: #ffe4e1;
   animation: fadeIn 1.5s ease;
 }
 

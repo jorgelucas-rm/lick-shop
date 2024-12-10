@@ -19,6 +19,7 @@
           </div>
         </div>
         <router-link to="/recovery" class="EsqueciMinhaSenha text-white">Esqueci minha senha</router-link>
+
         <button type="submit" class="button mt-4">
           <div class="Entrar">Entrar</div>
         </button>
@@ -40,16 +41,18 @@ export default {
       username: '',
       password: '',
       keepMeConnected: false,
+      isLoading: false,
     };
   },
   methods: {
     async handleLogin() {
+      this.isLoading = true;
       try {
-        const response = await api.post('/api/v1/login', {
+        // Passo 1: Realizar o login
+        const loginResponse = await api.post('/api/v1/login', {
           username: this.username,
           password: this.password,
         });
-        const { token } = response.data;
 
         if (this.keepMeConnected) {
           localStorageService.saveToken(token);
@@ -59,8 +62,14 @@ export default {
 
         this.$router.push({ name: 'dashboard' });
       } catch (error) {
-        console.error('Erro ao fazer login:', error);
-        alert('Erro ao realizar o login. Verifique suas credenciais.');
+        // Tratamento de erros
+        if (error.response && error.response.status === 401) {
+          alert('Usuário ou senha incorretos.');
+        } else {
+          alert('Erro ao conectar ao servidor. Tente novamente mais tarde.');
+        }
+      } finally {
+        this.isLoading = false;
       }
     },
     toggleKeepMeConnected() {
@@ -95,6 +104,7 @@ export default {
   border: 1px solid #ff0000;
   box-sizing: border-box;
   z-index: 1;
+
   padding: 20px;
 }
 
@@ -117,8 +127,6 @@ export default {
 .InputField {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
   gap: 10px;
 }
 
@@ -174,9 +182,20 @@ export default {
   margin-top: 15px;
 }
 
-.text {
-  color: #ff0000;
-  text-decoration: underline;
+.button {
+  width: 100%;
+  padding: 12px;
+  background: #ff0000;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.button:hover {
+  background-color: #cc0000;
 }
 
 .button {
