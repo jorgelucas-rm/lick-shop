@@ -3,6 +3,8 @@ services:
     image: mysql/mysql-server:latest
     container_name: my-mysql
     restart: always
+    ports:
+      - '9923:3306'
     environment:
       - MYSQL_DATABASE=dev_database
       - MYSQL_ROOT_PASSWORD=admin
