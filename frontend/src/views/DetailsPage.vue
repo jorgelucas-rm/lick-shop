@@ -133,7 +133,7 @@ export default {
 }
 
 .buy-button {
-  background: #28a745;
+  background: #000000;
   color: #fff;
 }
 
@@ -142,12 +142,13 @@ export default {
 }
 
 .wishlist-button {
-  background: #ffc107;
+  background: #ff0000;
   color: #fff;
 }
 
 .wishlist-button:hover {
-  background: #e0a800;
+  background: #ffbf00;
+
 }
 
 /* Estilo de Carregamento */

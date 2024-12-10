@@ -90,7 +90,6 @@ export default {
           this.preencherCamposComEndereco(data);
         } else {
           throw new Error("Erro ao buscar CEP");
-
         }
       } catch (error) {
         console.error(error.message);
@@ -115,9 +114,7 @@ export default {
     },
     
     async fetchCepData(cep) {
-      const response = await fetch(
-        `http://207.244.237.78:9921/api/v1/endereco/${cep}`
-      );
+      const response = await api.get(`/api/v1/endereco/${cep}`);
       if (!response.ok) throw new Error("Falha na requisição");
       return await response.json();
     },

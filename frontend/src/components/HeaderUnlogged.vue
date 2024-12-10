@@ -93,15 +93,14 @@
 
 <script>
 import api from "@/services/api"; // Certifique-se de ajustar a URL da API conforme necessário
+import { authStore } from '@/services/AuthStore'; // Importa o estado global de autenticação
+import localStorageService from '@/services/localStorage'; // Serviço de autenticação
 
 export default {
   data() {
     return {
       searchQuery: "",
       suggestedProducts: [],
-      isLoggedIn: false,
-      userName: "",
-
       cartItems: 0,
     };
   },
@@ -125,8 +124,7 @@ export default {
           console.error("Erro ao buscar produtos:", error);
         }
       } else {
-        this.suggestedProducts = [];
-
+        this.suggestedProducts = []; // Limpa as sugestões se o campo estiver vazio
       }
     },
     
@@ -134,7 +132,6 @@ export default {
     async fetchProductsByName(query) {
       try {
         const response = await api.get(`/api/v1/produto`, {
->>>>>>> develop
           params: { nome: query },
         });
         return response;
@@ -149,6 +146,7 @@ export default {
       this.$router.push(`/details/${product.id}`);
       this.suggestedProducts = []; // Limpa as sugestões após o clique
     },
+
     // Método para logout
     logout() {
       // Remove o token do localStorage

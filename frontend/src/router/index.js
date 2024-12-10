@@ -17,7 +17,7 @@ import WarningPrivacity from '@/views/WarningPrivacity.vue';
 import ContactPage from '@/views/ContactPage.vue';
 import CartPage from '@/views/CartPage.vue';
 import NotFound from '@/views/NotFoundPage.vue';
-import localStorageService from '@/services/localStorage'; 
+import { authStore } from '@/services/AuthStore'; // Importando o authStore
 
 
 // Função para verificar se o usuário está autenticado
@@ -122,36 +122,6 @@ const routes = [
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: NotFound,
-  },
-  {
-    path: '/cookies',
-    name: 'CookieNotice',
-    component: CookieNotice,
-  },
-  {
-    path: '/ads',
-    name: 'AboutAds',
-    component: AboutAds,
-  },
-  {
-    path: '/useconditions',
-    name: 'UseConditions',
-    component: UseConditions,
-  },
-  {
-    path: '/privacy',
-    name: 'WarningPrivacity',
-    component: WarningPrivacity,
-  },
-  {
-    path: '/contact',
-    name: 'ContactPage',
-    component: ContactPage,
-  },
-  {
-    path: '/aboutus',
-    name: 'AboutPage',
-    component: AboutPage,
   },
   {
     path: '/cookies',
