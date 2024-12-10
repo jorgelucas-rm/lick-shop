@@ -6,24 +6,42 @@
       <form @submit.prevent="handleLogin">
         <div class="InputField mb-3">
           <div class="Label text-white">Usuário</div>
-          <input v-model="username" type="text" class="Username form-control" placeholder="Digite seu usuário" required />
+          <input 
+            v-model="username" 
+            type="text" 
+            class="Username form-control" 
+            placeholder="Digite seu usuário" 
+            required 
+          />
         </div>
         <div class="InputField mb-3">
           <div class="Label text-white">Senha</div>
-          <input v-model="password" type="password" class="Password form-control" placeholder="Digite sua senha" required />
+          <input 
+            v-model="password" 
+            type="password" 
+            class="Password form-control" 
+            placeholder="Digite sua senha" 
+            required 
+          />
         </div>
         <div class="Group1 d-flex justify-content-between align-items-center mb-3">
           <div class="MantenhaMeConectado text-white">Mantenha-me conectado</div>
-          <div class="Switch" :class="{ active: keepMeConnected }" @click="toggleKeepMeConnected">
+          <div 
+            class="Switch" 
+            :class="{ active: keepMeConnected }" 
+            @click="toggleKeepMeConnected"
+          >
             <div class="HandleShape"></div>
           </div>
         </div>
         <router-link to="/recovery" class="EsqueciMinhaSenha text-white">Esqueci minha senha</router-link>
-        <button type="submit" class="button mt-4">
-          <div class="Entrar">Entrar</div>
+        <button type="submit" class="button mt-4" :disabled="isLoading">
+          <div v-if="isLoading">Entrando...</div>
+          <div v-else>Entrar</div>
         </button>
         <div class="AindaNOTemContaCriarConta text-white text-center mt-3">
-          Ainda não tem conta? <router-link to="/register" class="text-danger">Crie uma conta</router-link>
+          Ainda não tem conta? 
+          <router-link to="/register" class="text-danger">Crie uma conta</router-link>
         </div>
       </form>
     </div>
@@ -33,6 +51,7 @@
 <script>
 import api from '@/services/api';
 import localStorageService from '@/services/localStorage';
+import { authStore } from '@/services/AuthStore'; // Se você estiver usando authStore
 
 export default {
   data() {
@@ -40,27 +59,67 @@ export default {
       username: '',
       password: '',
       keepMeConnected: false,
+      isLoading: false,
     };
   },
   methods: {
     async handleLogin() {
+      this.isLoading = true;
       try {
-        const response = await api.post('/api/v1/login', {
+        // Passo 1: Realizar o login
+        const loginResponse = await api.post('/api/v1/login', {
           username: this.username,
           password: this.password,
         });
-        const { token } = response.data;
 
-        if (this.keepMeConnected) {
-          localStorageService.saveToken(token);
+        const { token } = loginResponse.data;
+
+        // Passo 2: Buscar o usuário pela API
+        const userResponse = await api.get('/api/v1/usuario');
+        const user = userResponse.data.find(u => u.conta.username === this.username && u.conta.password === this.password);
+
+        if (user) {
+          // Passo 3: Buscar detalhes do usuário
+          const userDetailsResponse = await api.get(`/api/v1/usuario/${user.id}`);
+          const userDetails = userDetailsResponse.data;
+
+          // Passo 4: Verificar se o cargo é ADMIN
+          const isAdmin = userDetails.conta.cargo === 'ADMIN';
+          
+          // Salvar o token e o estado de admin no localStorage ou sessionStorage
+          if (this.keepMeConnected) {
+            localStorageService.saveToken(token);
+            localStorageService.saveIsAdmin(isAdmin); // Salva o estado de admin
+          } else {
+            sessionStorage.setItem('authToken', token);
+            sessionStorage.setItem('isAdmin', isAdmin); // Salva o estado de admin em sessionStorage
+          }
+
+          // Atualiza o estado global
+          authStore.isLoggedIn = true;
+          authStore.isAdmin = isAdmin; // Salva o estado de admin no authStore
+
+          // Emite um evento global para informar que o usuário está logado
+          this.$emit('loginStatusChanged');
+
+          // Redireciona para a página apropriada com base no cargo
+          if (isAdmin) {
+            this.$router.push({ name: 'AdminDashboard' }); // Rota do admin
+          } else {
+            this.$router.push({ name: 'Home' }); // Rota do usuário comum
+          }
         } else {
-          sessionStorage.setItem('authToken', token);
+          alert('Usuário ou senha incorretos.');
         }
-
-        this.$router.push({ name: 'dashboard' });
       } catch (error) {
-        console.error('Erro ao fazer login:', error);
-        alert('Erro ao realizar o login. Verifique suas credenciais.');
+        // Tratamento de erros
+        if (error.response && error.response.status === 401) {
+          alert('Usuário ou senha incorretos.');
+        } else {
+          alert('Erro ao conectar ao servidor. Tente novamente mais tarde.');
+        }
+      } finally {
+        this.isLoading = false;
       }
     },
     toggleKeepMeConnected() {
@@ -93,16 +152,12 @@ export default {
   background: rgba(27, 27, 27, 0.8);
   border-radius: 5px;
   border: 1px solid #ff0000;
-  box-sizing: border-box;
-  z-index: 1;
   padding: 20px;
 }
 
 .Login {
-  color: #F00;
-  font-family: 'Inter', sans-serif;
+  color: #f00;
   font-size: 47px;
-  font-style: normal;
   font-weight: 700;
 }
 
@@ -117,8 +172,6 @@ export default {
 .InputField {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
   gap: 10px;
 }
 
@@ -165,18 +218,11 @@ export default {
 .EsqueciMinhaSenha {
   font-size: 0.9rem;
   text-decoration: underline;
-  margin-top: 10px;
 }
 
 .AindaNOTemContaCriarConta {
   font-size: 1rem;
   text-align: center;
-  margin-top: 15px;
-}
-
-.text {
-  color: #ff0000;
-  text-decoration: underline;
 }
 
 .button {
@@ -193,25 +239,5 @@ export default {
 
 .button:hover {
   background-color: #cc0000;
-}
-
-@media (max-width: 576px) {
-  .FormLogIn {
-    width: 90%;
-    padding: 15px;
-  }
-
-  .Login {
-    font-size: 32px;
-  }
-
-  .Username,
-  .Password {
-    font-size: 0.9rem;
-  }
-
-  .button {
-    font-size: 1rem;
-  }
 }
 </style>

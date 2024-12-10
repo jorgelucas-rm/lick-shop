@@ -1,9 +1,7 @@
 <template>
   <div id="app">
-    <!-- Renderiza HeaderLogged se o usuário estiver logado, caso contrário renderiza HeaderUnlogged -->
-    <HeaderLogged v-if="isLoggedIn" />
-    <HeaderUnlogged v-else />
-    
+    <HeaderUnlogged/>
+
     <main>
       <router-view />
     </main>
@@ -13,34 +11,20 @@
 </template>
 
 <script>
-import HeaderUnlogged from './components/HeaderUnlogged.vue';
-import FooterDown from './components/FooterDown.vue';
-import HeaderLogged from './components/HeaderLogged.vue';
-import localStorageService from './services/localStorage'; // Serviço de autenticação
+import HeaderUnlogged from './components/HeaderUnlogged';
+import FooterDown from './components/FooterDown';
+import { authStore } from './services/AuthStore'; // Importa o estado global
 
 export default {
   components: {
-    HeaderLogged,
     HeaderUnlogged,
     FooterDown,
   },
-
-  data() {
-    return {
-      isLoggedIn: localStorageService.isAuthenticated(), // Verifica se o usuário está logado
-    };
-  },
-
-  created() {
-    // Atualiza o estado de login se necessário (ex: quando o usuário loga ou desloga)
-    this.isLoggedIn = localStorageService.isAuthenticated();
-  },
-
-  methods: {
-    updateLoginStatus() {
-      // Método para atualizar o estado de login
-      this.isLoggedIn = localStorageService.isAuthenticated();
-    }
+  computed: {
+    // Acessa o estado de login diretamente do authStore
+    isLoggedIn() {
+      return authStore.isLoggedIn; // Verifica se o usuário está logado
+    },
   },
 };
 </script>
@@ -49,11 +33,11 @@ export default {
 #app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; 
+  min-height: 100vh;
 }
 
 main {
-  flex: 1; 
+  flex: 1;
 }
 
 footer {
