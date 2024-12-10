@@ -47,6 +47,7 @@ export default createStore({
       };
 
       try {
+       
         const response = await api.post('/api/v1/usuario', requestData);
 
         if (response.status !== 200) {

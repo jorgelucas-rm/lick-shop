@@ -1,4 +1,4 @@
-<template> 
+<template>
   <div class="login-page">
     <div class="background-image"></div>
     <div class="form-container">
@@ -84,56 +84,35 @@ export default {
       this.loading = true;
       this.errorMessages.cep = ""; // Limpar mensagens de erro anteriores
       try {
-        // Primeira tentativa
-        const data = await this.fetchCepData(formattedCep);
-        if (data) {
-          this.preencherCamposComEndereco(data);
-        } else {
-          throw new Error("Erro ao buscar CEP");
+        // Requisição à API com o CEP formatado
+        const response = await fetch(
+          `https://api.lickshop.acilab.com.br/api/v1/endereco/${formattedCep}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Erro ao se conectar à API.");
         }
+
+        const data = await response.json();
+
+        // Verificar se a resposta contém os dados necessários
+        if (!data || !data.logradouro || !data.bairro || !data.cidade || !data.estado) {
+          throw new Error("Dados incompletos retornados pela API.");
+        }
+
+        // Preencher os campos com os dados recebidos da API
+        this.logradouro = data.logradouro || "";
+        this.bairro = data.bairro || "";
+        this.cidade = data.cidade || "";
+        this.estado = data.estado || "";
+        this.complemento = data.complemento || ""; // Opcional
       } catch (error) {
+        this.errorMessages.cep = "Erro ao buscar CEP. Verifique os dados ou tente novamente.";
         console.error(error.message);
-        this.errorMessages.cep = "Erro ao buscar CEP. Tentando novamente...";
-
-        // Segunda tentativa após um pequeno intervalo
-        setTimeout(async () => {
-          try {
-            const data = await this.fetchCepData(formattedCep);
-            if (data) {
-              this.preencherCamposComEndereco(data);
-            } else {
-              throw new Error("Erro ao buscar CEP");
-            }
-          } catch (retryError) {
-            this.errorMessages.cep = "Erro ao buscar CEP. Verifique os dados ou tente novamente.";
-          } finally {
-            this.loading = false;
-          }
-        }, 2000); // Espera 2 segundos antes da segunda tentativa
+      } finally {
+        this.loading = false;
       }
     },
-    
-    async fetchCepData(cep) {
-      const response = await api.get(`/api/v1/endereco/${cep}`);
-      if (!response.ok) throw new Error("Falha na requisição");
-      return await response.json();
-    },
-
-    preencherCamposComEndereco(data) {
-      if (!data || !data.logradouro || !data.bairro || !data.cidade || !data.estado) {
-        this.errorMessages.cep = "Dados incompletos retornados pela API.";
-        return;
-      }
-
-      // Preencher os campos com os dados recebidos da API
-      this.logradouro = data.logradouro || "";
-      this.bairro = data.bairro || "";
-      this.cidade = data.cidade || "";
-      this.estado = data.estado || "";
-      this.complemento = data.complemento || ""; // Opcional
-      this.loading = false;
-    },
-
     async prosseguir() {
       if (!this.logradouro || !this.bairro || !this.cidade || !this.estado) {
         alert("Preencha todos os campos obrigatórios.");
@@ -154,9 +133,6 @@ export default {
         await this.$store.dispatch("registerUser");
         alert("Cadastro realizado com sucesso!");
         this.$store.commit("clearData"); // Limpar o estado após o registro
-
-        // Redireciona para a página de login
-        this.$router.push("/login");
       } catch (error) {
         alert("Erro ao realizar o cadastro. Tente novamente.");
       }
@@ -172,7 +148,6 @@ export default {
   justify-content: center;
   height: 100vh;
   position: relative;
-  overflow-y: auto;
 }
 
 .background-image {
@@ -198,7 +173,7 @@ export default {
   border: 2px solid #ff0000;
   border-radius: 8px;
   padding: 20px 30px;
-  max-width: 450px; /* Tamanho mais adequado */
+  max-width: 400px;
   width: 100%;
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -218,7 +193,6 @@ export default {
   background: transparent;
   color: white;
 }
-
 .input-group label {
   display: block;
   margin-bottom: 5px;
@@ -227,7 +201,7 @@ export default {
 }
 
 .input-group input {
-  width: 100%;
+  width: 95%;
   padding: 8px;
   border: 1px solid #ffffff;
   border-radius: 4px;
@@ -282,22 +256,5 @@ input:-webkit-autofill {
   background: transparent !important;
   -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
   color: white !important;
-}
-
-/* Responsividade para telas menores */
-@media (max-width: 768px) {
-  .form-container {
-    max-width: 100%;
-    padding: 15px;
-  }
-  
-  .input-row #cep {
-    width: 100%;
-  }
-  
-  .input-row button {
-    width: 100%;
-    margin-top: 10px;
-  }
 }
 </style>
