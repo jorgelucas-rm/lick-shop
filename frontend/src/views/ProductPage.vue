@@ -66,7 +66,7 @@
             <div v-if="errorMessage" class="alert alert-danger text-center">
               {{ errorMessage }}
             </div>
-            <div v-if="!errorMessage && products.length === 0" class="text-center">
+            <div v-if="!errorMessage && filteredProducts.length === 0" class="text-center">
               Nenhum produto encontrado.
             </div>
             <div
@@ -133,16 +133,16 @@ export default {
       filteredProducts: [],
       categories: ["Preservativos", "Bdsm", "Vibradores", "Lubrificante"],
       brands: [
-          "La Pimenta",
-          "Hot Flower",
-          "Satisfaction",
-          "Sexy Fantasy",
-          "Olla",
-          "K-Med",
-          "Jontex",
-          "Peper Blend",
-          "DemiLove"
-        ],
+        "La Pimenta",
+        "Hot Flower",
+        "Satisfaction",
+        "Sexy Fantasy",
+        "Olla",
+        "K-Med",
+        "Jontex",
+        "Peper Blend",
+        "DemiLove",
+      ],
       selectedCategory: this.$route.query.category || "",
       selectedBrand: "",
       priceRange: 5000,
@@ -166,7 +166,6 @@ export default {
       try {
         const response = await api.get("/api/v1/produto");
         this.products = response.data || [];
-        this.filteredProducts = this.products;
         this.filterProducts();
       } catch (error) {
         this.errorMessage =
@@ -198,19 +197,20 @@ export default {
         const matchesPrice = product.valorVenda <= this.priceRange;
         return matchesCategory && matchesBrand && matchesPrice;
       });
+      this.currentPage = 1; // Reset to first page when filters change
     },
     resetFilters() {
       this.selectedCategory = "";
       this.selectedBrand = "";
       this.priceRange = 5000;
-      this.filteredProducts = this.products;
+      this.filterProducts();
     },
   },
   mounted() {
     this.loadProducts();
   },
   watch: {
-    "$route.query.category": function(newCategory) {
+    "$route.query.category": function (newCategory) {
       this.selectedCategory = newCategory || "";
       this.filterProducts();
     },

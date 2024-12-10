@@ -17,11 +17,16 @@ import WarningPrivacity from '@/views/WarningPrivacity.vue';
 import ContactPage from '@/views/ContactPage.vue';
 import CartPage from '@/views/CartPage.vue';
 import NotFound from '@/views/NotFoundPage.vue';
-import localStorageService from '@/services/localStorage'; 
+import { authStore } from '@/services/AuthStore'; // Importando o authStore
 
 // Função para verificar se o usuário está autenticado
 const isAuthenticated = () => {
-  return !!localStorageService.getToken(); // Retorna true se houver um token
+  return authStore.isLoggedIn; // Usa o estado do authStore para verificar se está logado
+};
+
+// Função para verificar se o usuário é administrador
+const isAdmin = () => {
+  return authStore.isAdmin; // Usa o estado do authStore para verificar se é admin
 };
 
 // Função para redirecionar para a página de login se não estiver autenticado
@@ -30,6 +35,30 @@ const requiresAuth = (to, from, next) => {
     next({ name: 'Login' }); // Redireciona para o login
   } else {
     next(); // Permite o acesso à rota
+  }
+};
+
+// Função para redirecionar para a página de login se o usuário não for admin
+const requiresAdmin = (to, from, next) => {
+  if (!isAdmin()) {
+    next({ name: 'Home' }); // Redireciona para a Home se não for admin
+  } else {
+    next(); // Permite o acesso à rota de admin
+  }
+};
+
+// Função para verificar se o usuário está acessando seu próprio perfil
+const requiresCorrectProfile = (to, from, next) => {
+  const token = localStorageService.getToken();
+  if (!token) return next({ name: 'Login' }); // Redireciona para o login se não autenticado
+  
+  const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decodificando o JWT
+  const userId = decodedToken.id; // Obtém o id do usuário do token
+  
+  if (to.params.id === userId || isAdmin()) {
+    next(); // Permite o acesso se o ID no perfil for igual ao ID do usuário logado ou se for admin
+  } else {
+    next({ name: 'Home' }); // Redireciona para a Home se o usuário tentar acessar o perfil de outro usuário
   }
 };
 
@@ -44,13 +73,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
-    // Não precisa de verificação de autenticação, pois é pública
   },
   {
     path: '/register',
     name: 'Register',
     component: Register,
-    // Não precisa de verificação de autenticação
   },
   {
     path: '/products',
@@ -66,7 +93,6 @@ const routes = [
     path: '/recovery',
     name: 'RecuperationPage',
     component: RecuperationPage,
-    // Não precisa de verificação de autenticação
   },
   {
     path: '/details/:id',
@@ -74,27 +100,27 @@ const routes = [
     component: DetailsPage,
   },
   {
-    path: '/profile',
+    path: '/profile/:id',
     name: 'ProfilePage',
     component: ProfilePage,
-    beforeEnter: requiresAuth, // Verifica se o usuário está autenticado
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: NotFound,
+    beforeEnter: [requiresAuth, requiresCorrectProfile], // Verifica se é o próprio usuário ou um administrador
   },
   {
     path: '/adm',
     name: 'AdmPage',
     component: AdmPage,
-    //beforeEnter: requiresAuth, // Verifica se o usuário está autenticado
+    beforeEnter: [requiresAuth, requiresAdmin], // Verifica se é admin
   },
   {
     path: '/adm/products',
     name: 'AdmProductPage',
     component: AdmProductPage,
-    //beforeEnter: requiresAuth, // Verifica se o usuário está autenticado
+    beforeEnter: [requiresAuth, requiresAdmin], // Verifica se é admin
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
   },
   {
     path: '/cookies',
@@ -130,6 +156,7 @@ const routes = [
     path: '/cart',
     name: 'CartPage',
     component: CartPage,
+    beforeEnter: [requiresAuth, requiresCorrectProfile],
   }
 ];
 
