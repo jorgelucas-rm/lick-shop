@@ -133,16 +133,16 @@ export default {
       filteredProducts: [],
       categories: ["Preservativos", "Bdsm", "Vibradores", "Lubrificante"],
       brands: [
-        "La Pimenta",
-        "Hot Flower",
-        "Satisfaction",
-        "Sexy Fantasy",
-        "Olla",
-        "K-Med",
-        "Jontex",
-        "Peper Blend",
-        "DemiLove",
-      ],
+          "La Pimenta",
+          "Hot Flower",
+          "Satisfaction",
+          "Sexy Fantasy",
+          "Olla",
+          "K-Med",
+          "Jontex",
+          "Peper Blend",
+          "DemiLove"
+        ],
       selectedCategory: this.$route.query.category || "",
       selectedBrand: "",
       priceRange: 5000,
@@ -166,6 +166,7 @@ export default {
       try {
         const response = await api.get("/api/v1/produto");
         this.products = response.data || [];
+        this.filteredProducts = this.products;
         this.filterProducts();
       } catch (error) {
         this.errorMessage =
@@ -176,7 +177,8 @@ export default {
     getImageUrl(product) {
       return (
         product?.imagemList?.[0] ||
-        "https://api.lickshop.acilab.com.br/uploads/images/default.jpeg"
+        "http://207.244.237.78:9921/uploads/images/default.jpeg"
+
       );
     },
     changePage(direction) {
@@ -210,7 +212,8 @@ export default {
     this.loadProducts();
   },
   watch: {
-    "$route.query.category": function (newCategory) {
+    "$route.query.category": function(newCategory) {
+
       this.selectedCategory = newCategory || "";
       this.filterProducts();
     },

@@ -45,7 +45,8 @@
             <img class="filter-icon" src="@/assets/dildo.png" alt="Vibradores" />
             <span class="filter-text">Vibradores</span>
           </router-link>
-          <router-link to="/products?category=Lubrificante" class="filter-item fundo-lubrificantes">
+
+          <router-link to="/products?category=Lubrificantes" class="filter-item fundo-lubrificantes">
             <img class="filter-icon" src="@/assets/lubrificante.png" alt="Lubrificantes" />
             <span class="filter-text">Lubrificante</span>
           </router-link>
@@ -131,15 +132,9 @@ export default {
   },
   mounted() {
     // Mudar slide automaticamente a cada 5 segundos
-    this.carouselInterval = setInterval(() => {
+    setInterval(() => {
       this.nextSlide();
     }, 5000);
-
-    // Carregar produtos da API
-    this.loadProducts();
-  },
-  beforeUnmount() {
-    clearInterval(this.carouselInterval);
   },
 };
 </script>
@@ -289,5 +284,65 @@ export default {
   font-size: 20px;
   color: #d30000;
   margin-top: 20px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .carousel {
+    height: 250px;
+  }
+
+  .central-box {
+    width: 95%;
+  }
+
+  .title {
+    font-size: 20px;
+    padding: 5px;
+  }
+
+  .product-card {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .filter-item {
+    width: 45%;
+    height: 180px;
+  }
+
+  .quick-filters .filter-container {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel {
+    height: 200px;
+  }
+
+  .central-box {
+    width: 100%;
+    height: auto;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .product-card {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .filter-item {
+    width: 45%;
+    height: 150px;
+  }
+
+  .view-all-button {
+    width: 180px;
+  }
 }
 </style>
