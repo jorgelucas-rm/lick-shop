@@ -85,7 +85,7 @@ export default {
       try {
         // Requisição à API com o CEP formatado
         const response = await fetch(
-          `https://207.244.237.78:9921/api/v1/endereco/${formattedCep}`
+          `https://api.lickshop.acilab.com.br/api/v1/endereco/${formattedCep}`
         );
 
         if (!response.ok) {
