@@ -5,7 +5,6 @@
         <div class="text-center text-wrapper mb-4">Fale Conosco</div>
   
         <div class="row">
-          <!-- Informações de Contato -->
           <div class="col-12 col-md-6 mb-4">
             <div class="content">
               <h2>Formas de Contato</h2>
@@ -17,7 +16,6 @@
             </div>
           </div>
   
-          <!-- Formulário de Contato -->
           <div class="col-12 col-md-6 mb-4">
             <div class="content">
               <h2>Envie uma Mensagem</h2>
@@ -67,7 +65,6 @@
   </script>
   
   <style scoped>
-  /* Fundo da página */
   .background-image {
     position: fixed;
     top: 0;
@@ -110,7 +107,6 @@
     margin-bottom: 2rem;
   }
   
-  /* Formulário */
   .content {
     background-color: #fff;
     padding: 30px;

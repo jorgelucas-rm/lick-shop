@@ -5,22 +5,22 @@
       <div class="Login text-center text-danger font-weight-bold mb-4">Login</div>
       <form @submit.prevent="handleLogin">
         <div class="InputField mb-3">
-          <div class="Label text-white">Usuário</div>
+          <label for="username" class="Label text-white">Usuário</label>
           <input 
+            id="username"
             v-model="username" 
             type="text" 
             class="Username form-control" 
-            placeholder="Digite seu usuário" 
             required 
           />
         </div>
         <div class="InputField mb-3">
-          <div class="Label text-white">Senha</div>
+          <label for="password" class="Label text-white">Senha</label>
           <input 
+            id="password"
             v-model="password" 
             type="password" 
             class="Password form-control" 
-            placeholder="Digite sua senha" 
             required 
           />
         </div>
@@ -31,7 +31,6 @@
             :class="{ active: keepMeConnected }" 
             @click="toggleKeepMeConnected"
           >
-
             <div class="HandleShape"></div>
           </div>
         </div>
@@ -51,9 +50,7 @@
 
 <script>
 import api from '@/services/api';
-import localStorageService from '@/services/localStorage';
-import { authStore } from '@/services/AuthStore'; // Se você estiver usando authStore
-
+import { authStore } from '@/services/AuthStore';
 
 export default {
   data() {
@@ -68,57 +65,39 @@ export default {
     async handleLogin() {
       this.isLoading = true;
       try {
-        // Passo 1: Realizar o login
         const loginResponse = await api.post('/api/v1/login', {
           username: this.username,
           password: this.password,
         });
+        const token = loginResponse.data;
 
-        const { token } = loginResponse.data;
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        const id = decodedToken.id;
+        const nome = decodedToken.nome || decodedToken.name || this.username;
+        const isAdmin = decodedToken.roles?.includes('ADMIN') || decodedToken.isAdmin || false;
 
-        // Passo 2: Buscar o usuário pela API
-        const userResponse = await api.get('/api/v1/usuario');
-        const user = userResponse.data.find(u => u.conta.username === this.username && u.conta.password === this.password);
+        const storage = this.keepMeConnected ? localStorage : sessionStorage;
+        storage.setItem('auth_token', token);
+        storage.setItem('auth_id', id);
+        storage.setItem('auth_nome', nome);
+        storage.setItem('auth_isAdmin', JSON.stringify(isAdmin));
 
-        if (user) {
-          // Passo 3: Buscar detalhes do usuário
-          const userDetailsResponse = await api.get(`/api/v1/usuario/${user.id}`);
-          const userDetails = userDetailsResponse.data;
+        authStore.isLoggedIn = true;
+        authStore.isAdmin = isAdmin;
 
-          // Passo 4: Verificar se o cargo é ADMIN
-          const isAdmin = userDetails.conta.cargo === 'ADMIN';
-          
-          // Salvar o token e o estado de admin no localStorage ou sessionStorage
-          if (this.keepMeConnected) {
-            localStorageService.saveToken(token);
-            localStorageService.saveIsAdmin(isAdmin); // Salva o estado de admin
-          } else {
-            sessionStorage.setItem('authToken', token);
-            sessionStorage.setItem('isAdmin', isAdmin); // Salva o estado de admin em sessionStorage
-          }
+        this.$emit('loginStatusChanged');
 
-          // Atualiza o estado global
-          authStore.isLoggedIn = true;
-          authStore.isAdmin = isAdmin; // Salva o estado de admin no authStore
-
-          // Emite um evento global para informar que o usuário está logado
-          this.$emit('loginStatusChanged');
-
-          // Redireciona para a página apropriada com base no cargo
-          if (isAdmin) {
-            this.$router.push({ name: 'AdminDashboard' }); // Rota do admin
-          } else {
-            this.$router.push({ name: 'Home' }); // Rota do usuário comum
-          }
-        } else {
-          alert('Usuário ou senha incorretos.');
-        }
+        // Redireciona
+        this.$router.push({ name: 'Home' });
       } catch (error) {
-        // Tratamento de erros
-        if (error.response && error.response.status === 401) {
+        if (error.response?.status === 401) {
           alert('Usuário ou senha incorretos.');
+        } else if (error.response) {
+          alert(`Erro ${error.response.status}: ${error.response.data || 'Erro desconhecido'}`);
+        } else if (error.request) {
+          alert('Não foi possível conectar ao servidor. Verifique sua conexão.');
         } else {
-          alert('Erro ao conectar ao servidor. Tente novamente mais tarde.');
+          alert('Erro ao processar a solicitação. Tente novamente.');
         }
       } finally {
         this.isLoading = false;
@@ -130,6 +109,8 @@ export default {
   },
 };
 </script>
+
+
 
 <style scoped>
 .background-image {

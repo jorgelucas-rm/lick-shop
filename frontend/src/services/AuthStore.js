@@ -1,28 +1,33 @@
 import { reactive } from 'vue';
-import localStorageService from '@/services/localStorage';
+import localStorageService from '@/services/LocalStorageService';
 
-// Estado reativo global para autenticação e administrador
 export const authStore = reactive({
   isLoggedIn: localStorageService.isAuthenticated(),
-  isAdmin: localStorageService.getIsAdmin(), // Armazena o status de admin
+  userId: localStorageService.getAuthId() || null,
+  userName: localStorageService.getAuthNome() || '',
+  isAdmin: localStorageService.getAuthIsAdmin() || false,
 
-  // Atualiza o estado de login
+  setAuthData(token, id, nome, isAdmin, persistent = true) {
+    localStorageService.saveToken(token, persistent);
+    localStorageService.saveAuthData(id, nome, isAdmin, persistent);
+    this.isLoggedIn = true;
+    this.userId = id;
+    this.userName = nome;
+    this.isAdmin = isAdmin;
+  },
+
   updateLoginStatus() {
     this.isLoggedIn = localStorageService.isAuthenticated();
-    this.isAdmin = localStorageService.getIsAdmin(); // Atualiza o estado de admin
+    this.userId = localStorageService.getAuthId();
+    this.userName = localStorageService.getAuthNome();
+    this.isAdmin = localStorageService.getAuthIsAdmin();
   },
 
-  // Atualiza o estado de admin (caso o cargo do usuário seja ADMIN)
-  updateAdminStatus(isAdmin) {
-    this.isAdmin = isAdmin;
-    localStorageService.saveIsAdmin(isAdmin); // Salva o estado de admin no localStorage
-  },
-
-  // Reseta os status de login e admin (usado no logout)
   resetAuthStatus() {
     this.isLoggedIn = false;
+    this.userId = null;
+    this.userName = '';
     this.isAdmin = false;
-    localStorageService.removeToken(); // Remove o token
-    localStorageService.removeIsAdmin(); // Remove o estado de admin
+    localStorageService.clearAll();
   },
 });

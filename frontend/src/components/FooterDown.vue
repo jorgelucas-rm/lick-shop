@@ -2,14 +2,12 @@
   <footer class="footerDown">
     <div class="container-fluid">
       <div class="row w-100 align-items-center">
-        <!-- LICKSHOP LTDA e Linha Divisória -->
         <div class="col-12 col-md-auto text-center text-md-start d-flex align-items-center">
           <div class="text-wrapper">LICKSHOP LTDA</div>
           <div class="whiteline"></div>
           <div class="text-wrapper-2">©2024-2024</div>
         </div>
 
-        <!-- Links Condições de Uso -->
         <div class="col-12 col-md-auto text-center text-md-start">
           <p class="condi-es-de-uso">
             <router-link to="/useconditions" class="links">Condições de Uso</router-link>
@@ -19,7 +17,6 @@
           </p>
         </div>
 
-        <!-- Logo -->
         <div class="col-12 col-md-auto text-center text-md-end">
           <img class="block" alt="logo" src="@/assets/nome.png" />
         </div>
@@ -35,7 +32,6 @@ export default {
 </script>
 
 <style scoped>
-/* Footer */
 .footerDown {
   background-color: #000000;
   border-top: #ff0000 solid 0.5px;

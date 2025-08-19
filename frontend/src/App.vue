@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <HeaderUnlogged/>
+    <HeaderNav/>
 
     <main>
       <router-view />
@@ -11,19 +11,18 @@
 </template>
 
 <script>
-import HeaderUnlogged from './components/HeaderUnlogged';
+import HeaderNav from './components/HeaderNav';
 import FooterDown from './components/FooterDown';
-import { authStore } from './services/AuthStore'; // Importa o estado global
+import { authStore } from './services/AuthStore';
 
 export default {
   components: {
-    HeaderUnlogged,
+    HeaderNav,
     FooterDown,
   },
   computed: {
-    // Acessa o estado de login diretamente do authStore
     isLoggedIn() {
-      return authStore.isLoggedIn; // Verifica se o usuário está logado
+      return authStore.isLoggedIn;
     },
   },
 };
