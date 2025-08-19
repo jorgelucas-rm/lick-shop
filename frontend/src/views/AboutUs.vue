@@ -66,7 +66,6 @@
   </script>
   
   <style scoped>
-  /* Estilo dos cards */
   .card {
     border: none;
     border-radius: 12px;
@@ -80,7 +79,6 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
   
-  /* Imagem circular */
   .card-img-top {
     width: 120px;
     height: 120px;
@@ -88,20 +86,17 @@
     border: 4px solid #ffe4e1;
   }
   
-  /* Título */
   .card-title {
     font-size: 1.2rem;
     font-weight: bold;
     color: #333;
   }
-  
-  /* Papel do integrante */
+
   .card-text {
     font-size: 1rem;
     color: #555;
   }
   
-  /* Botão */
   .btn {
     border-radius: 8px;
     font-weight: bold;
